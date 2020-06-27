@@ -6,14 +6,14 @@ String createKeyForChatRoom(List<User> usersArray) {
   return "${usersArray[0].userId}_${usersArray[1].userId}";
 }
 
-String nameFromEmail(String email) {
-  return email.split("@")[0];
-}
+//String nameFromEmail(String email) {
+//  return email.split("@")[0];
+//}
 
 String precisionChatText(Chat objChat, User usermine, User userother) {
   return objChat.sender_id == usermine.userId
       ? "Me:> ${objChat.message}"
-      : "${nameFromEmail(userother.userName)}:> ${objChat.message}";
+      : "${userother.userName}:> ${objChat.message}";
 }
 
 bool isMyMessage(Chat objChat, User usermine, User userother) {

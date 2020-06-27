@@ -6,7 +6,7 @@ class Chat {
   String _sender_id;
 //  String _sender_name;
 //  String _receiver_name;
-  int _timeStamp;
+  String _timeStamp;
   String _message;
 
 //  Chat(this._sender_id, this._sender_name,this._receiver_name,this._message,this._timeStamp);
@@ -26,7 +26,7 @@ class Chat {
 //  String get sender_name => _sender_name;
 //  String get receiver_name => _receiver_name;
   String get message => _message;
-  int get timeStamp => _timeStamp;
+  String get timeStamp => _timeStamp;
 
   Chat.fromSnapshot(DataSnapshot snapshot) {
     _id = snapshot.key;

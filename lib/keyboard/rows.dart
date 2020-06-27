@@ -268,6 +268,11 @@ List<List<VirtualKeyboardKey>> _getKeyboardRows() {
             text: 'Esc',
             capsText: 'Esc',
             action: VirtualKeyboardKeyAction.escape));
+        rowKeys.add(  VirtualKeyboardKey(
+            keyType: VirtualKeyboardKeyType.Hybrid,
+            text: 'Send',
+            capsText: 'SEND',
+            action: VirtualKeyboardKeyAction.send));
         // Insert the space key into second position of row.
 //        rowKeys.insert(
 //          1,
