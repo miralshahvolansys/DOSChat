@@ -8,6 +8,7 @@ import '../api_manager/constant.dart' as CONSTANT;
 class AuthProvider with ChangeNotifier {
   final _authInstance = FirebaseAuth.instance;
   AuthResult _authResult;
+  FirebaseUser _authUser;
 
   FirebaseAuth get authInstance {
     return _authInstance;
@@ -15,6 +16,14 @@ class AuthProvider with ChangeNotifier {
 
   String _getEmailFromUsername(String username) {
     return '$username@gmail.com';
+  }
+
+  Future<String> getUsername() async {
+    if (_authUser == null) {
+      _authUser = await authInstance.currentUser();
+    }
+    final username = _authUser.email.split('@').first;
+    return username;
   }
 
   Future<void> signIn({username: String, password: String}) async {
@@ -59,6 +68,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    _authUser = null;
     await FirebaseAuth.instance.signOut();
   }
 
