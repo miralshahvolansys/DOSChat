@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "577900000699",
+    "firebase_url": "https://retrochat2020-d602a.firebaseio.com",
+    "project_id": "retrochat2020-d602a",
+    "storage_bucket": "retrochat2020-d602a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577900000699:android:2a0c607f120b96078c009e",
+        "android_client_info": {
+          "package_name": "com.volansys.retrochat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577900000699-jhgc4vm2ute5bfp96nnqn5c6m7fk82dd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAoEB9YEdmrcOG4Hvnp38zhzTv9wgL3G5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "577900000699-jhgc4vm2ute5bfp96nnqn5c6m7fk82dd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "577900000699-cp0p9b2cul9f00rhd1jff948r2slcnna.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.volansys.retrochat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
