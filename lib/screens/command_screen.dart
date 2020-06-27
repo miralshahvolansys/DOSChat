@@ -185,6 +185,9 @@ class _CommandScreenState extends State<CommandScreen> {
 
       _commandController.text = '';
       //_addCommandTextField();
+      Future.delayed(const Duration(milliseconds: 200), () {
+        _addCommandTextField();
+      });
     }
   }
 
@@ -314,8 +317,7 @@ Widget getUserListWidget(BuildContext context, Function onComplete) {
     builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
       switch (snapshot.connectionState) {
         case ConnectionState.waiting:
-          return new Text('Awaiting result...',
-              style: TextStyle(color: Colors.white));
+          return new Text('loading...', style: TextStyle(color: Colors.white));
         case ConnectionState.done:
           return new UserListWidget(
             userNameList: '${snapshot.data}',

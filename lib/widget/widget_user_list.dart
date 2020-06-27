@@ -10,7 +10,11 @@ class UserListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(color: Colors.white, wordSpacing: 15, height: 1.7),
+        style: TextStyle(
+          color: Colors.white,
+          wordSpacing: 15,
+          height: 1.7,
+        ),
         text: userNameList,
       ),
     );
