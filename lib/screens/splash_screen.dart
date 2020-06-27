@@ -2,8 +2,10 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:retrochat/screens/command_screen.dart';
 
 class Splash extends StatefulWidget {
+
   @override
   _SplashState createState() => _SplashState();
   static const routeName = '/Splash';
@@ -47,7 +49,7 @@ class _SplashState extends State<Splash> {
 
           if (_start < 1) {
             timer.cancel();
-            Navigator.popAndPushNamed(context, "/");
+            Navigator.popAndPushNamed(context, CommandScreen.routeName);
           } else {
             _start = _start - 1;
           }

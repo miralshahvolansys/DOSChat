@@ -16,6 +16,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  bool isLoggedIn = false;
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -43,22 +44,25 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.onAuthStateChanged,
           builder: (sbContext, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return Splash();
+              /* Center(
                 child: Scaffold(
                   body: Text('Loading...'),
                 ),
-              );
+              );*/
             } else {
               print('HAS DATA ${snapshot.hasData}');
-              return CommandScreen(
+              isLoggedIn = snapshot.hasData;
+              return Splash();
+                /*CommandScreen(
                 isLoggedIn: snapshot.hasData,
-              );
+              );*/
             }
           },
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          CommandScreen.routeName: (cntx) => CommandScreen(),
+          CommandScreen.routeName: (cntx) => CommandScreen(isLoggedIn: isLoggedIn,),
           Splash.routeName: (cntx) => Splash(),
         },
       ),
