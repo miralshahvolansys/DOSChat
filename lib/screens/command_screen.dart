@@ -166,8 +166,23 @@ class _CommandScreenState extends State<CommandScreen> {
         final obj = ModelCommand();
         //obj.commandType = eCommandType.help;
         obj.inputType = eInputType.infoText;
-        obj.infoText = 'Command not found.';
+        obj.infoText = 'Invalid command. Type \'help\' to get command list.';
         _addObjectInArray(obj);
+
+        final arrFiltered = arrCommand.where((element) {
+          return element.inputType == eInputType.commandTextField;
+        }).toList();
+
+        arrFiltered.forEach((element) {
+          final index = arrCommand.indexOf(element);
+          if (index >= 0) {
+            arrCommand[index].infoText = command;
+            arrCommand[index].inputType = eInputType.infoText;
+          }
+        });
+
+        _commandController.text = '';
+        _addCommandTextField();
         break;
     }
   }
