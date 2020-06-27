@@ -14,4 +14,5 @@ enum eCommandType {
   none,
   authenticationRequired,
   help,
+  ls_userlist,
 }

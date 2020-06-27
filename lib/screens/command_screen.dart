@@ -9,6 +9,9 @@ import '../widget/widget_help.dart';
 import '../utility/enum.dart';
 import '../api_manager/constant.dart' as CONSTANT;
 
+import '../provider/user_provider.dart';
+import '../widget/widget_user_list.dart';
+
 class CommandScreen extends StatefulWidget {
   static const routeName = '/command_screen';
   final bool isLoggedIn;
@@ -153,6 +156,7 @@ class _CommandScreenState extends State<CommandScreen> {
         _showAllCommandList(command: command);
         break;
       case CONSTANT.ls_userlist:
+        _showUserList(command: command);
         break;
       case CONSTANT.clear:
         break;
@@ -165,6 +169,22 @@ class _CommandScreenState extends State<CommandScreen> {
         obj.infoText = 'Command not found.';
         _addObjectInArray(obj);
         break;
+    }
+  }
+
+  _showUserList({String command}) {
+    final obj = ModelCommand();
+    obj.commandType = eCommandType.ls_userlist;
+    _addObjectInArray(obj);
+
+    final index = arrCommand.indexWhere(
+        (element) => element.inputType == eInputType.commandTextField);
+    if (index >= 0) {
+      arrCommand[index].inputType = eInputType.infoText;
+      arrCommand[index].infoText = command;
+
+      _commandController.text = '';
+      //_addCommandTextField();
     }
   }
 
@@ -257,6 +277,11 @@ class _CommandScreenState extends State<CommandScreen> {
                       );
                     } else if (command.commandType == eCommandType.help) {
                       return getCommandListWidget();
+                    } else if (command.commandType ==
+                        eCommandType.ls_userlist) {
+                      return getUserListWidget(context, () {
+                        // _addCommandTextField();
+                      });
                     }
                     // SHELL COMMAND
                     return Padding(
@@ -279,4 +304,30 @@ class _CommandScreenState extends State<CommandScreen> {
 
 Widget getCommandListWidget() {
   return HelpWidget();
+}
+
+Widget getUserListWidget(BuildContext context, Function onComplete) {
+  final provider = Provider.of<UserList>(context, listen: false);
+  Future<String> _calculation = provider.fetchUserList();
+  return FutureBuilder<String>(
+    future: _calculation, // a Future<String> or null
+    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+      switch (snapshot.connectionState) {
+        case ConnectionState.waiting:
+          return new Text('Awaiting result...',
+              style: TextStyle(color: Colors.white));
+        case ConnectionState.done:
+          return new UserListWidget(
+            userNameList: '${snapshot.data}',
+          );
+        default:
+          if (snapshot.hasError)
+            return new Text('Error: ${snapshot.error}',
+                style: TextStyle(color: Colors.white));
+          else
+            return new Text('Result: ${snapshot.data}',
+                style: TextStyle(color: Colors.white));
+      }
+    },
+  );
 }
