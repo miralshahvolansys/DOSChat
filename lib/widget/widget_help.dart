@@ -6,7 +6,6 @@ class HelpWidget extends StatelessWidget {
     return Container(
       color: Colors.black,
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

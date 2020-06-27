@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../api_manager/http_exception.dart';
 import '../provider/auth_provider.dart';
 
+import '../widget/widget_help.dart';
+
 class CommandScreen extends StatefulWidget {
   static const routeName = '/command_screen';
   final bool isLoggedIn;
@@ -339,37 +341,5 @@ TextStyle commandTextStyle() {
 }
 
 Widget getCommandListWidget() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        'ls_userlist',
-        style: commandTextStyle(),
-      ),
-      SizedBox(
-        height: 4.0,
-      ),
-      Text(
-        'start_chat',
-        style: commandTextStyle(),
-      ),
-      SizedBox(
-        height: 4.0,
-      ),
-      Text(
-        'clear',
-        style: commandTextStyle(),
-      ),
-      SizedBox(
-        height: 4.0,
-      ),
-      Text(
-        'exit',
-        style: commandTextStyle(),
-      ),
-      SizedBox(
-        height: 4.0,
-      ),
-    ],
-  );
+  return HelpWidget();
 }
