@@ -77,7 +77,7 @@ Widget getCommandTextField({
 TextStyle commandTextStyle() {
   return TextStyle(
     color: Colors.white,
-    fontSize: 14.0,
+    fontSize: 15.0,
     fontFamily: 'Perfect DOS VGA',
   );
 }

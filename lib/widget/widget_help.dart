@@ -75,7 +75,7 @@ class HelpChildWidget extends StatelessWidget {
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 12.0,
+              fontSize: 15.0,
               fontFamily: 'Perfect DOS VGA',
             ),
           ),
