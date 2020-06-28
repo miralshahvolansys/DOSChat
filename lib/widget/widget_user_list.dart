@@ -15,6 +15,7 @@ class UserListWidget extends StatelessWidget {
           wordSpacing: 10,
           height: 1.7,
           fontSize: 12.0,
+          fontFamily: 'Perfect DOS VGA',
         ),
         text: userNameList,
       ),

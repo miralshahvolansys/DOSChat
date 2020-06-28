@@ -68,6 +68,7 @@ class HelpChildWidget extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: 12.0,
+              fontFamily: 'Perfect DOS VGA',
             ),
           ),
         ),

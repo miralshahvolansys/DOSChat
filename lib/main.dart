@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
           accentColor: Colors.deepOrangeAccent,
-          fontFamily: 'Lato',
+          fontFamily: 'Perfect DOS VGA',
           textTheme: TextTheme(
             headline6: TextStyle(
               fontFamily: 'Anton',
