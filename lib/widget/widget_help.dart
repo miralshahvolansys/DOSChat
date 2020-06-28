@@ -15,7 +15,7 @@ class HelpWidget extends StatelessWidget {
           ),
           HelpChildWidget(
             text:
-                'Retro-Chat, version 1.0.0-beta \nThese commands are defined internally. Type ‘help’ to see this list.',
+                'Retro-Chat, version 1.0.0-beta \nThese commands are defined internally. Type \'help\' to see this list.',
             leftPadding: EdgeInsets.only(left: 0),
           ),
           /*HelpChildWidget(
