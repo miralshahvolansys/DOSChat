@@ -17,6 +17,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
+  User userMine = User(
+      userId: "1YTHlthZVQPxzSFlIN9afG7dUSU2",
+      userName: "mirant.patel");
+  User userOther = User(
+      userId: "G2iAxPZqlwXi348vUfxcCJ3dQBu1",
+      userName: "ankit_khatri");
+
   // This widget is the root of your application.
   bool isLoggedIn = false;
   @override
@@ -42,7 +50,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: ChatScreen(),
+        home: ChatScreen(userMine: userMine,userOther: userOther,),
         debugShowCheckedModeBanner: false,
         routes: {
           CommandScreen.routeName: (cntx) => CommandScreen(isLoggedIn: isLoggedIn,),

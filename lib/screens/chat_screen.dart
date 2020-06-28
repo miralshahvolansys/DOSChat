@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:retrochat/provider/Model/chatmodel.dart';
+import 'package:retrochat/models/chatmodel.dart';
 import 'package:retrochat/api_manager/constant.dart';
 import 'package:retrochat/provider/user_provider.dart';
 import 'package:retrochat/utility/common_methods.dart';
@@ -11,30 +11,37 @@ import 'package:retrochat/keyboard/virtual_keyboard.dart';
 final database = FirebaseDatabase.instance;
 
 class ChatScreen extends StatefulWidget {
+
+  final User userMine;
+  final User userOther;
+
+  ChatScreen({@required this.userMine,@required this.userOther});
+
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _ChatScreenState createState() => _ChatScreenState(userMine: this.userMine,userOther: this.userOther);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  User userMine = User(
-      userId: "1YTHlthZVQPxzSFlIN9afG7dUSU2",
-      userName: "mirant.patel@gmail.com");
-  User userOther = User(
-      userId: "G2iAxPZqlwXi348vUfxcCJ3dQBu1",
-      userName: "ankit_khatri@gmail.com");
+
+  final User userMine;
+  final User userOther;
+
+  _ChatScreenState({@required this.userMine,@required this.userOther});
 
   final _childSenderQuery = database.reference().child(keyTableMainChild);
   StreamSubscription<Event> _onChatAddedSenderSubscription;
 
   List<Chat> listChatAllData = [];
+  List<Chat> listChatAllDataTempStore = [];
   List<Chat> listChatCommand = [];
   String keyChatRoom;
 
   ScrollController scrollListView = ScrollController();
   bool isShowKeyboard = false;
+  bool isShownNormalReloadWithTextField = true;
 
   // Holds the text that user typed.
-  String text = '';
+  String text = keyForMe;
   StreamController<String> _events;
 
   // True if shift enabled.
@@ -53,14 +60,16 @@ class _ChatScreenState extends State<ChatScreen> {
     _onChatAddedSenderSubscription =
         _childSenderQuery.child(keyChatRoom).onChildAdded.listen(_getReadData);
 
-    textEnterMessage.text = "Me:> ";
+    textEnterMessage.text = keyForMe;
 
+    focusNodeMessage.requestFocus();
     _events = StreamController<String>.broadcast();
-    _events.add("MirantMiker:>");
+    _events.add(keyForMe);
   }
 
   @override
   void dispose() {
+    _events.close();
     _onChatAddedSenderSubscription.cancel();
     super.dispose();
   }
@@ -80,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
     Future.delayed(const Duration(milliseconds: 50), () {
       setState(() {
         scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
-//        focusNodeMessage.requestFocus();
+        focusNodeMessage.requestFocus();
       });
     });
   }
@@ -88,28 +97,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        actions: <Widget>[
-//          FlatButton(
-//              onPressed: () {
-//                setState(() {
-////                  focusNodeMessage.unfocus();
-//                  listChatCommand.add(Chat(
-//                      "",
-//                      "Do you want to exit from chat(y/n)?",
-//                      DateTime.now().millisecondsSinceEpoch));
-//                  Future.delayed(const Duration(milliseconds: 50), () {
-//                    setState(() {
-//                      scrollListView
-//                          .jumpTo(scrollListView.position.maxScrollExtent);
-////                      focusNodeMessage.requestFocus();
-//                    });
-//                  });
-//                });
-//              },
-//              child: Text("Exit")),
-//        ],
-//      ),
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
@@ -118,7 +105,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: ListView.builder(
 //                  physics: NeverScrollableScrollPhysics(),
               controller: scrollListView,
-              itemCount: (listChatAllData.length + listChatCommand.length + 1),
+              itemCount: isShownNormalReloadWithTextField
+                  ? (listChatAllData.length + listChatCommand.length + 1)
+                  : 0,
               itemBuilder: (context, index) {
                 if (index ==
                     (listChatAllData.length + listChatCommand.length)) {
@@ -126,9 +115,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                     child: GestureDetector(
                       onTap: () {
-                        FocusScope.of(context).requestFocus(focusNodeMessage);
                         setState(() {
                           isShowKeyboard = true;
+                          Future.delayed(const Duration(milliseconds: 50), () {
+                            setState(() {
+                              scrollListView.jumpTo(
+                                  scrollListView.position.maxScrollExtent);
+                              focusNodeMessage.requestFocus();
+                            });
+                          });
                         });
                       },
                       child: AbsorbPointer(
@@ -148,7 +143,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                 keyboardType: TextInputType.multiline,
                                 textInputAction: TextInputAction.done,
                                 maxLines: null,
-                                maxLength: listChatCommand.length > 0 ? 6 : null,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18.0),
                                 controller: textEnterMessage,
@@ -164,7 +158,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                     child: Text(
-                      "${listChatCommand[index - listChatAllData.length].sender_id == "" ? "C:/>" : "Me:>"} ${listChatCommand[index - listChatAllData.length].message}",
+                      "${listChatCommand[index - listChatAllData.length].sender_id == "" ? keyForCommandPrecision : keyForMe} ${listChatCommand[index - listChatAllData.length].message}",
                       style: TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
                   );
@@ -207,16 +201,23 @@ class _ChatScreenState extends State<ChatScreen> {
   /// Fired when the virtual keyboard key is pressed.
   _onKeyPress(VirtualKeyboardKey key) {
     if (key.keyType == VirtualKeyboardKeyType.String) {
-      text = text + (shiftEnabled ? key.capsText : key.text);
+      if (listChatCommand.length > 0) {
+        if (text.length < (keyForMe.length + 1)) {
+          text = text + (shiftEnabled ? key.capsText : key.text);
+        }
+      } else {
+        text = text + (shiftEnabled ? key.capsText : key.text);
+      }
       _events.add(text);
     } else if (key.keyType == VirtualKeyboardKeyType.Action) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.Backspace:
-          if (text.length == 0) return;
+          if (text.length == keyForMe.length) return;
           text = text.substring(0, text.length - 1);
           _events.add(text);
           break;
         case VirtualKeyboardKeyAction.Return:
+          if (listChatCommand.length > 0) return;
           text = text + '\n';
           _events.add(text);
           break;
@@ -236,13 +237,88 @@ class _ChatScreenState extends State<ChatScreen> {
     } else if (key.keyType == VirtualKeyboardKeyType.Hybrid) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.escape:
-          print("Escape");
+          text = keyForMe;
+          _events.add(text);
+
+          setState(() {
+            listChatCommand.add(Chat(
+                "", keyForExit, "${DateTime.now().millisecondsSinceEpoch}"));
+            Future.delayed(const Duration(milliseconds: 50), () {
+              setState(() {
+                scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
+                focusNodeMessage.requestFocus();
+              });
+            });
+          });
           break;
         case VirtualKeyboardKeyAction.send:
-          print("Send");
+          getSendButtonFromKeyboard();
           break;
         default:
       }
+    }
+  }
+
+  void getSendButtonFromKeyboard() {
+    String mainValue = text;
+    mainValue = mainValue.substring(keyForMe.length, text.length).trim();
+
+    if (mainValue.length > 0) {
+      text = keyForMe;
+      _events.add(text);
+      if (listChatCommand.length > 0) {
+        switch (mainValue.toLowerCase()) {
+          case "y":
+//            Navigator.pop(context);
+            return;
+            break;
+          case "n":
+            isShownNormalReloadWithTextField = false;
+            listChatAllDataTempStore = List.from(listChatAllData);
+            listChatCommand = [];
+            listChatAllData = [];
+            break;
+          default:
+            {
+              listChatCommand.add(Chat("xyz", mainValue,
+                  "${DateTime.now().millisecondsSinceEpoch}"));
+              listChatCommand.add(Chat("", keyForCommandNotFound,
+                  "${DateTime.now().millisecondsSinceEpoch}"));
+              listChatCommand.add(Chat(
+                  "", keyForExit, "${DateTime.now().millisecondsSinceEpoch}"));
+            }
+            break;
+        }
+      } else {
+        sendData(Chat(userMine.userId, mainValue,
+            "${DateTime.now().millisecondsSinceEpoch}"));
+      }
+
+      setState(() {
+        textEnterMessage.text = keyForMe;
+        if (isShownNormalReloadWithTextField) {
+          Future.delayed(const Duration(milliseconds: 50), () {
+            setState(() {
+              scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
+              focusNodeMessage.requestFocus();
+            });
+          });
+        } else {
+          Future.delayed(const Duration(milliseconds: 50), () {
+            setState(() {
+              isShownNormalReloadWithTextField = true;
+              listChatAllData = List.from(listChatAllDataTempStore);
+              Future.delayed(const Duration(milliseconds: 50), () {
+                setState(() {
+                  scrollListView
+                      .jumpTo(scrollListView.position.maxScrollExtent);
+                  focusNodeMessage.requestFocus();
+                });
+              });
+            });
+          });
+        }
+      });
     }
   }
 }

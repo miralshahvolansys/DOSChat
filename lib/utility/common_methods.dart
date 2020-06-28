@@ -1,4 +1,5 @@
-import 'package:retrochat/provider/Model/chatmodel.dart';
+import 'package:retrochat/api_manager/constant.dart';
+import 'package:retrochat/models/chatmodel.dart';
 import 'package:retrochat/provider/user_provider.dart';
 
 String createKeyForChatRoom(List<User> usersArray) {
@@ -12,7 +13,7 @@ String createKeyForChatRoom(List<User> usersArray) {
 
 String precisionChatText(Chat objChat, User usermine, User userother) {
   return objChat.sender_id == usermine.userId
-      ? "Me:> ${objChat.message}"
+      ? "${keyForMe}${objChat.message}"
       : "${userother.userName}:> ${objChat.message}";
 }
 
