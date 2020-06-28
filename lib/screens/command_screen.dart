@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retrochat/provider/user_provider.dart';
+import 'package:retrochat/screens/chat_screen.dart';
 
 import '../api_manager/http_exception.dart';
 import '../widget/widget_command.dart';
@@ -155,7 +157,15 @@ class _CommandScreenState extends State<CommandScreen> {
   }
 
   // HANDLE COMMAND
-  _addCommandTextField() async {
+  _addCommandTextField({String inputText}) async {
+    final index = arrCommand.indexWhere(
+        (element) => element.inputType == eInputType.commandTextField);
+    if (index >= 0) {
+      arrCommand[index].infoText = inputText;
+      arrCommand[index].inputType = eInputType.infoText;
+    }
+
+    _commandController.text = '';
     final obj = ModelCommand();
     obj.inputType = eInputType.commandTextField;
     final username =
@@ -164,13 +174,18 @@ class _CommandScreenState extends State<CommandScreen> {
     _addObjectInArray(obj);
   }
 
-  _handleInputCommand({String command}) {
+  _handleInputCommand({String inputCommand}) {
+    final command = _mapInputCommand(inputCommand: inputCommand);
+    print(command);
     switch (command) {
       case CONSTANT.help:
-        _showAllCommandList(command: command);
+        _showAllCommandList(inputCommand: inputCommand);
         break;
       case CONSTANT.ls_userlist:
-        _showUserList(command: command);
+        _showUserList(inputCommand: inputCommand);
+        break;
+      case CONSTANT.startChat:
+        _startChat(inputCommand: inputCommand);
         break;
       case CONSTANT.clear:
         break;
@@ -190,18 +205,33 @@ class _CommandScreenState extends State<CommandScreen> {
         arrFiltered.forEach((element) {
           final index = arrCommand.indexOf(element);
           if (index >= 0) {
-            arrCommand[index].infoText = command;
+            arrCommand[index].infoText = inputCommand;
             arrCommand[index].inputType = eInputType.infoText;
           }
         });
-
-        _commandController.text = '';
         _addCommandTextField();
         break;
     }
   }
 
-  _showUserList({String command}) {
+  String _mapInputCommand({String inputCommand}) {
+    final arr = inputCommand.split(' ');
+    if (inputCommand.contains(CONSTANT.help) && arr.length == 1) {
+      return CONSTANT.help;
+    } else if (inputCommand.contains(CONSTANT.ls_userlist) && arr.length == 2) {
+      return CONSTANT.ls_userlist;
+    } else if (inputCommand.contains(CONSTANT.startChat) && arr.length == 3) {
+      return CONSTANT.startChat;
+    } else if (inputCommand.contains(CONSTANT.clear) && arr.length == 1) {
+      return CONSTANT.clear;
+    } else if (inputCommand.contains(CONSTANT.exit) && arr.length == 1) {
+      return CONSTANT.exit;
+    } else {
+      return '';
+    }
+  }
+
+  _showUserList({String inputCommand}) {
     final obj = ModelCommand();
     obj.commandType = eCommandType.ls_userlist;
     _addObjectInArray(obj);
@@ -210,14 +240,12 @@ class _CommandScreenState extends State<CommandScreen> {
         (element) => element.inputType == eInputType.commandTextField);
     if (index >= 0) {
       arrCommand[index].inputType = eInputType.infoText;
-      arrCommand[index].infoText = command;
-
-      _commandController.text = '';
+      arrCommand[index].infoText = inputCommand;
       _addCommandTextField();
     }
   }
 
-  _showAllCommandList({String command}) {
+  _showAllCommandList({String inputCommand}) {
     final obj = ModelCommand();
     obj.commandType = eCommandType.help;
     _addObjectInArray(obj);
@@ -226,15 +254,42 @@ class _CommandScreenState extends State<CommandScreen> {
         (element) => element.inputType == eInputType.commandTextField);
     if (index >= 0) {
       arrCommand[index].inputType = eInputType.infoText;
-      arrCommand[index].infoText = command;
-
-      _commandController.text = '';
+      arrCommand[index].infoText = inputCommand;
       _addCommandTextField();
     }
   }
 
-  _startChat() {}
+  _startChat({String inputCommand}) async {
+    if (inputCommand.trim().length > 0) {
+      final username = inputCommand.split(' ').last;
+      if (username != null) {
+        final auth = _getAuth;
+        try {
+          final otherUser = auth.userList.firstWhere((element) =>
+              element.userName.toLowerCase() == username.toLowerCase());
+          final loginUser = await auth.getLoginUser();
+          if (loginUser != null && otherUser != null) {
+            // REDIRECT TO CHAT SCREEN
+            /*Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatScreen(
+                  userMine: loginUser,
+                  userOther: otherUser,
+                ),
+              ),
+            );*/
+          }
+        } catch (err) {
+          _addInfoTextInList(
+              message: 'Invalid username! Please try with different username.');
+          _addCommandTextField(inputText: inputCommand);
+        }
+      }
+    }
+  }
 
+  // BUILD METHOD
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -300,7 +355,7 @@ class _CommandScreenState extends State<CommandScreen> {
                         onSubmitted: (text) {
                           final trimmedText = text.trim();
                           if (trimmedText.length > 0) {
-                            _handleInputCommand(command: trimmedText);
+                            _handleInputCommand(inputCommand: trimmedText);
                           }
                         },
                       );
@@ -308,7 +363,7 @@ class _CommandScreenState extends State<CommandScreen> {
                       return getCommandListWidget();
                     } else if (command.commandType ==
                         eCommandType.ls_userlist) {
-                      return getUserListWidget(context);
+                      return getUserListWidget(context, _getAuth);
                     }
                     // SHELL COMMAND
                     return Padding(
@@ -333,8 +388,7 @@ Widget getCommandListWidget() {
   return HelpWidget();
 }
 
-Widget getUserListWidget(BuildContext context) {
-  final auth = Provider.of<AuthProvider>(context, listen: false);
+Widget getUserListWidget(BuildContext context, AuthProvider auth) {
   return new UserListWidget(
     userNameList: '${auth.userNames}',
   );

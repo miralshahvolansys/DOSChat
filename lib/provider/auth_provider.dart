@@ -26,6 +26,17 @@ class AuthProvider with ChangeNotifier {
     return [..._users];
   }
 
+  Future<User> getLoginUser() async {
+    try {
+      final username = await getUsername();
+      final user = _users.firstWhere((element) =>
+          element.userName.toLowerCase() == username.toLowerCase());
+      return user;
+    } catch (err) {
+      return null;
+    }
+  }
+
   String get userNames {
     String userNameList = '';
     _users.forEach((item) {
