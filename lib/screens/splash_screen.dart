@@ -81,7 +81,12 @@ class _SplashState extends State<Splash> {
             duration: Duration(milliseconds: 500),
             child: Text(
               _loadingText + _loadingTextSuffix,
-              style: TextStyle(fontSize: 22, color: (Colors.grey)),
+              style: TextStyle(fontSize: 22, color: (Colors.grey),fontFamily: 'Perfect DOS VGA'),
+
+              /*Text(
+                'Roboto Mono sample',
+                style: TextStyle(fontFamily: 'RobotoMono'),
+              );*/
               textDirection: TextDirection.ltr,
             ),
           ))),
