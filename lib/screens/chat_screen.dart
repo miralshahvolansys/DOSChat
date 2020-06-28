@@ -157,7 +157,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                     child: Text(
-                      "${listChatCommand[index - listChatAllData.length].sender_id == "" ? keyForCommandPrecision : keyForMe} ${listChatCommand[index - listChatAllData.length].message}",
+                      "${listChatCommand[index - listChatAllData.length].sender_id == "" ? keyForCommandPrecision : keyForMe}${listChatCommand[index - listChatAllData.length].message}",
                       style: TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
                   );

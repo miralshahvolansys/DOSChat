@@ -14,7 +14,7 @@ String createKeyForChatRoom(List<User> usersArray) {
 String precisionChatText(Chat objChat, User usermine, User userother) {
   return objChat.sender_id == usermine.userId
       ? "${keyForMe}${objChat.message}"
-      : "${userother.userName}:> ${objChat.message}";
+      : "${userother.userName}:\\> ${objChat.message}";
 }
 
 bool isMyMessage(Chat objChat, User usermine, User userother) {
