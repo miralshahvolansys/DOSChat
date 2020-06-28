@@ -171,13 +171,13 @@ class _CommandScreenState extends State<CommandScreen> {
     obj.inputType = inputType;
 
     if (inputType == eInputType.usernameTextField) {
-      obj.prefixText = '${obj.prefixText} username >';
+      obj.prefixText = '${obj.prefixText} username>';
     } else if (inputType == eInputType.passwordTextField) {
-      obj.prefixText = '${obj.prefixText} password >';
+      obj.prefixText = '${obj.prefixText} password>';
     } else if (loginUsername != null && loginUsername.length > 0) {
-      obj.prefixText = '${obj.prefixText} ${loginUsername ?? ''} >';
+      obj.prefixText = '${obj.prefixText} ${loginUsername ?? ''}>';
     } else {
-      obj.prefixText = '${obj.prefixText} >';
+      obj.prefixText = '${obj.prefixText}>';
     }
     obj.infoText = message;
     _addObjectInArray(obj);
@@ -193,9 +193,9 @@ class _CommandScreenState extends State<CommandScreen> {
 
     //final username = await Provider.of<AuthProvider>(context, listen: false).getUsername();
     if (loginUsername != null && loginUsername.length > 0) {
-      obj.prefixText = '${obj.prefixText} ${loginUsername ?? ''} >';
+      obj.prefixText = '${obj.prefixText} ${loginUsername ?? ''}>';
     } else {
-      obj.prefixText = '${obj.prefixText} >';
+      obj.prefixText = '${obj.prefixText}>';
     }
     setState(() {
       arrCommand.add(obj);
@@ -230,7 +230,7 @@ class _CommandScreenState extends State<CommandScreen> {
       default:
         _addInfoTextInList(message: inputCommand);
         final obj = ModelCommand();
-        obj.prefixText = '${obj.prefixText} >';
+        obj.prefixText = '${obj.prefixText}>';
         obj.inputType = eInputType.infoText;
         obj.infoText = 'Invalid command. Type \'help\' to get command list.';
         _addObjectInArray(obj);
@@ -376,7 +376,7 @@ class _CommandScreenState extends State<CommandScreen> {
     } else if (commandType == eCommandType.password) {
       postFixText = 'password';
     }
-    arrCommand[index].prefixText = 'C:\\ $postFixText >';
+    arrCommand[index].prefixText = 'C:\\ $postFixText>';
   }
 
   _scrollToBottom() {
