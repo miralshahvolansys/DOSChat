@@ -96,7 +96,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async => false,
+    child:Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
@@ -196,7 +198,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
-    );
+    ),);
   }
 
   /// Fired when the virtual keyboard key is pressed.
