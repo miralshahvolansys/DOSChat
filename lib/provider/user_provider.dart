@@ -4,10 +4,12 @@ import 'package:firebase_database/firebase_database.dart';
 class User {
   final String userId;
   final String userName;
+  final int timeStamp;
 
   User({
     this.userId,
     this.userName,
+    this.timeStamp,
   });
 }
 
@@ -17,7 +19,7 @@ class UserList with ChangeNotifier {
     return [..._userList];
   }
 
-  Future<void> fetchUserList() async {
+  Future<String> fetchUserList() async {
     final database = FirebaseDatabase.instance;
     try {
       await database.reference().child('users').once().then((snapshot) {
@@ -32,6 +34,11 @@ class UserList with ChangeNotifier {
           });
         }
       });
+      String userNameList = '';
+      _userList.forEach((item) {
+        userNameList += item.userName + " ";
+      });
+      return Future.value(userNameList);
     } catch (error) {
       throw error;
     }

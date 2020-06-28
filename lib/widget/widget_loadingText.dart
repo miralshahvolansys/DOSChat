@@ -21,7 +21,7 @@ class LoadingAnimation extends StatelessWidget {
             ),
           ),
           TyperAnimatedTextKit(
-              speed: Duration(milliseconds: 800),
+              speed: Duration(milliseconds: 650),
               text: [
                 animatedText,
               ],

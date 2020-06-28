@@ -11,22 +11,21 @@ import 'package:retrochat/keyboard/virtual_keyboard.dart';
 final database = FirebaseDatabase.instance;
 
 class ChatScreen extends StatefulWidget {
-
   final User userMine;
   final User userOther;
 
-  ChatScreen({@required this.userMine,@required this.userOther});
+  ChatScreen({@required this.userMine, @required this.userOther});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState(userMine: this.userMine,userOther: this.userOther);
+  _ChatScreenState createState() =>
+      _ChatScreenState(userMine: this.userMine, userOther: this.userOther);
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   final User userMine;
   final User userOther;
 
-  _ChatScreenState({@required this.userMine,@required this.userOther});
+  _ChatScreenState({@required this.userMine, @required this.userOther});
 
   final _childSenderQuery = database.reference().child(keyTableMainChild);
   StreamSubscription<Event> _onChatAddedSenderSubscription;

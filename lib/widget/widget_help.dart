@@ -9,24 +9,36 @@ class HelpWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          HelpChildWidget(
-            text: 'GNU bash, version 1.0.0-beta',
-            leftPadding: EdgeInsets.only(left: 0),
+          SizedBox(
+            height: 8,
           ),
           HelpChildWidget(
+            text: 'Retro Chat, version 1.0.0-beta',
+            leftPadding: EdgeInsets.only(left: 0),
+          ),
+          /*HelpChildWidget(
             text:
                 'These shell commands are defined internally.  Type `help` to see this list.',
             leftPadding: EdgeInsets.only(left: 0),
-          ),
+          ),*/
           SizedBox(
             height: 12,
           ),
           HelpChildWidget(
-            text: 'ls - Display the list of users.',
+            text: 'ls userlist | Display the list of users.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'ls - Display the list of users.',
+            text:
+                'start chat | Start chat with user. e.g. start chat {username}',
+            leftPadding: EdgeInsets.only(left: 15),
+          ),
+          HelpChildWidget(
+            text: 'clear | Clear the command screen.',
+            leftPadding: EdgeInsets.only(left: 15),
+          ),
+          HelpChildWidget(
+            text: 'exit | Logout user.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
         ],
@@ -45,6 +57,9 @@ class HelpChildWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        SizedBox(
+          height: 8,
+        ),
         Padding(
           padding: leftPadding,
           child: Text(
@@ -52,11 +67,10 @@ class HelpChildWidget extends StatelessWidget {
             textAlign: TextAlign.left,
             style: TextStyle(
               color: Colors.white,
+              fontSize: 12.0,
+              fontFamily: 'Perfect DOS VGA',
             ),
           ),
-        ),
-        SizedBox(
-          height: 8,
         ),
       ],
     );

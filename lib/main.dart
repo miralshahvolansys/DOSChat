@@ -6,8 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/chat_screen.dart';
-
 ///added this to check all dependancies are downloaded or not
 
 void main() {
@@ -17,14 +15,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
-  User userMine = User(
-      userId: "1YTHlthZVQPxzSFlIN9afG7dUSU2",
-      userName: "mirant.patel");
-  User userOther = User(
-      userId: "G2iAxPZqlwXi348vUfxcCJ3dQBu1",
-      userName: "ankit_khatri");
-
   // This widget is the root of your application.
   bool isLoggedIn = false;
   @override
@@ -43,14 +33,33 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.deepOrange,
           accentColor: Colors.deepOrangeAccent,
-          fontFamily: 'Lato',
+          fontFamily: 'Perfect DOS VGA',
           textTheme: TextTheme(
             headline6: TextStyle(
               fontFamily: 'Anton',
             ),
           ),
         ),
-        home: ChatScreen(userMine: userMine,userOther: userOther,),
+        home: StreamBuilder(
+          stream: FirebaseAuth.instance.onAuthStateChanged,
+          builder: (sbContext, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Splash();
+              /* Center(
+                child: Scaffold(
+                  body: Text('Loading...'),
+                ),
+              );*/
+            } else {
+              print('HAS DATA ${snapshot.hasData}');
+              isLoggedIn = snapshot.hasData;
+              return Splash();
+              /*CommandScreen(
+                isLoggedIn: snapshot.hasData,
+              );*/
+            }
+          },
+        ),
         debugShowCheckedModeBanner: false,
         routes: {
           CommandScreen.routeName: (cntx) => CommandScreen(isLoggedIn: isLoggedIn,),

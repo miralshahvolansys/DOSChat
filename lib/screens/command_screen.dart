@@ -1,11 +1,15 @@
-import 'package:retrochat/models/command.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../api_manager/http_exception.dart';
+import '../widget/widget_command.dart';
 import '../provider/auth_provider.dart';
-
+import '../models/command.dart';
 import '../widget/widget_help.dart';
+import '../utility/enum.dart';
+import '../api_manager/constant.dart' as CONSTANT;
+
+import '../widget/widget_user_list.dart';
 
 class CommandScreen extends StatefulWidget {
   static const routeName = '/command_screen';
@@ -23,6 +27,7 @@ class _CommandScreenState extends State<CommandScreen> {
   final _commandController = TextEditingController();
 
   List<ModelCommand> arrCommand = [];
+  AuthProvider auth;
 
   @override
   void initState() {
@@ -34,6 +39,7 @@ class _CommandScreenState extends State<CommandScreen> {
           message: 'Welcome to Retro Chat. Start chatting with your friends.');
       _addCommandTextField();
     }
+    _fetchUser();
   }
 
   @override
@@ -44,10 +50,23 @@ class _CommandScreenState extends State<CommandScreen> {
     super.dispose();
   }
 
+  AuthProvider get _getAuth {
+    if (auth == null) {
+      auth = Provider.of<AuthProvider>(context, listen: false);
+    }
+    return auth;
+  }
+
+  _fetchUser() async {
+    final auth = _getAuth;
+    await auth.getUserList();
+    print(auth.userNames);
+  }
+
   // SIGN IN
   Future<void> _signIn() async {
     try {
-      final auth = Provider.of<AuthProvider>(context, listen: false);
+      final auth = _getAuth;
       await auth.signUp(
         username: _usernameController.text,
         password: _passwordController.text,
@@ -136,42 +155,85 @@ class _CommandScreenState extends State<CommandScreen> {
   }
 
   // HANDLE COMMAND
-  _addCommandTextField() {
+  _addCommandTextField() async {
     final obj = ModelCommand();
     obj.inputType = eInputType.commandTextField;
-    print('IS LOGIN :: ${widget.isLoggedIn}');
-    if (widget.isLoggedIn) {
-      final authUser = Provider.of<AuthProvider>(context, listen: false)
-          .authInstance
-          .currentUser();
-      authUser.then((value) => print(value.email));
-    }
+    final username =
+        await Provider.of<AuthProvider>(context, listen: false).getUsername();
+    obj.prefixText = '${obj.prefixText} $username >';
     _addObjectInArray(obj);
   }
 
   _handleInputCommand({String command}) {
-    if (command == 'help') {
-      final obj = ModelCommand();
-      obj.commandType = eCommandType.help;
-      _addObjectInArray(obj);
+    switch (command) {
+      case CONSTANT.help:
+        _showAllCommandList(command: command);
+        break;
+      case CONSTANT.ls_userlist:
+        _showUserList(command: command);
+        break;
+      case CONSTANT.clear:
+        break;
+      case CONSTANT.exit:
+        break;
+      default:
+        final obj = ModelCommand();
+        //obj.commandType = eCommandType.help;
+        obj.inputType = eInputType.infoText;
+        obj.infoText = 'Invalid command. Type \'help\' to get command list.';
+        _addObjectInArray(obj);
 
-      final index = arrCommand.indexWhere(
-          (element) => element.inputType == eInputType.commandTextField);
-      if (index >= 0) {
-        arrCommand[index].inputType = eInputType.infoText;
-        arrCommand[index].infoText = command;
+        final arrFiltered = arrCommand.where((element) {
+          return element.inputType == eInputType.commandTextField;
+        }).toList();
+
+        arrFiltered.forEach((element) {
+          final index = arrCommand.indexOf(element);
+          if (index >= 0) {
+            arrCommand[index].infoText = command;
+            arrCommand[index].inputType = eInputType.infoText;
+          }
+        });
 
         _commandController.text = '';
         _addCommandTextField();
-      }
-    } else {
-      final obj = ModelCommand();
-      //obj.commandType = eCommandType.help;
-      obj.inputType = eInputType.infoText;
-      obj.infoText = 'Command not found.';
-      _addObjectInArray(obj);
+        break;
     }
   }
+
+  _showUserList({String command}) {
+    final obj = ModelCommand();
+    obj.commandType = eCommandType.ls_userlist;
+    _addObjectInArray(obj);
+
+    final index = arrCommand.indexWhere(
+        (element) => element.inputType == eInputType.commandTextField);
+    if (index >= 0) {
+      arrCommand[index].inputType = eInputType.infoText;
+      arrCommand[index].infoText = command;
+
+      _commandController.text = '';
+      _addCommandTextField();
+    }
+  }
+
+  _showAllCommandList({String command}) {
+    final obj = ModelCommand();
+    obj.commandType = eCommandType.help;
+    _addObjectInArray(obj);
+
+    final index = arrCommand.indexWhere(
+        (element) => element.inputType == eInputType.commandTextField);
+    if (index >= 0) {
+      arrCommand[index].inputType = eInputType.infoText;
+      arrCommand[index].infoText = command;
+
+      _commandController.text = '';
+      _addCommandTextField();
+    }
+  }
+
+  _startChat() {}
 
   @override
   Widget build(BuildContext context) {
@@ -244,6 +306,9 @@ class _CommandScreenState extends State<CommandScreen> {
                       );
                     } else if (command.commandType == eCommandType.help) {
                       return getCommandListWidget();
+                    } else if (command.commandType ==
+                        eCommandType.ls_userlist) {
+                      return getUserListWidget(context);
                     }
                     // SHELL COMMAND
                     return Padding(
@@ -264,82 +329,35 @@ class _CommandScreenState extends State<CommandScreen> {
   }
 }
 
-// AUTHENTICATION WIDGET
-Widget getWidgetTextField(
-    {ModelCommand command,
-    bool obscureText = false,
-    TextEditingController controller,
-    Function(String) onSubmitted}) {
-  return Row(
-    children: <Widget>[
-      Text(
-        '${command.prefixText}',
-        style: commandTextStyle(),
-      ),
-      SizedBox(
-        width: 8.0,
-      ),
-      Expanded(
-        child: TextField(
-          controller: controller,
-          showCursor: true,
-          cursorWidth: 8,
-          cursorColor: Colors.white,
-          onSubmitted: onSubmitted,
-          obscureText: obscureText,
-          enabled: command.allowEditing,
-          autocorrect: false,
-          textCapitalization: TextCapitalization.none,
-          style: commandTextStyle(),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-          ),
-        ),
-      )
-    ],
-  );
-}
-
-Widget getCommandTextField({
-  ModelCommand command,
-  TextEditingController controller,
-  Function(String) onSubmitted,
-}) {
-  return Row(
-    children: <Widget>[
-      Text(
-        '${command.prefixText}',
-        style: commandTextStyle(),
-      ),
-      SizedBox(
-        width: 8.0,
-      ),
-      Expanded(
-        child: TextField(
-          controller: controller,
-          showCursor: true,
-          cursorWidth: 8,
-          cursorColor: Colors.white,
-          onSubmitted: onSubmitted,
-          autocorrect: false,
-          textCapitalization: TextCapitalization.none,
-          style: commandTextStyle(),
-          decoration: InputDecoration(
-            border: InputBorder.none,
-          ),
-        ),
-      )
-    ],
-  );
-}
-
-TextStyle commandTextStyle() {
-  return TextStyle(
-    color: Colors.white,
-    fontSize: 12.0,
-  );
-}
-
 Widget getCommandListWidget() {
   return HelpWidget();
+}
+
+Widget getUserListWidget(BuildContext context) {
+  final auth = Provider.of<AuthProvider>(context, listen: false);
+  return new UserListWidget(
+    userNameList: '${auth.userNames}',
+  );
+
+  // Future<String> _calculation = provider.fetchUserList();
+  // return FutureBuilder<String>(
+  //   future: _calculation, // a Future<String> or null
+  //   builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+  //     switch (snapshot.connectionState) {
+  //       case ConnectionState.waiting:
+  //         return new Text('loading...', style: TextStyle(color: Colors.white));
+  //       case ConnectionState.done:
+  //         return new UserListWidget(
+  //           userNameList: '${snapshot.data}',
+  //         );
+  //       default:
+  //         if (snapshot.hasError)
+  //           return new Text('Error: ${snapshot.error}',
+  //               style: TextStyle(color: Colors.white));
+  //         else
+  //           return new Text('Result: ${snapshot.data}',
+  //               style: TextStyle(color: Colors.white));
+  //     }
+  //   },
+  // );
 }

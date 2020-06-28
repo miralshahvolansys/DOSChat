@@ -79,5 +79,11 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
+  fonts:
+    - family: Perfect DOS VGA
+      fonts:
+        - asset: assets/fonts/Perfect DOS VGA 437.ttf
+        - asset: assets/fonts/Perfect DOS VGA 437 Win.ttf
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
