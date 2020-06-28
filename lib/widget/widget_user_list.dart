@@ -12,8 +12,9 @@ class UserListWidget extends StatelessWidget {
       text: TextSpan(
         style: TextStyle(
           color: Colors.white,
-          wordSpacing: 15,
+          wordSpacing: 10,
           height: 1.7,
+          fontSize: 12.0,
         ),
         text: userNameList,
       ),
