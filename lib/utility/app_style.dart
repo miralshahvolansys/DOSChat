@@ -6,7 +6,10 @@ class AppStyle {
   static Color txg = Color(0xff16DE93);
   static Color txr = Color(0xffFB5E5C);
   static Color bgl = Color(0xffF0D3153);
+  static Color keyboardbg = Color(0xffB8B8B8);
 
+
+  static TextStyle commandTextSyle = TextStyle(fontSize: 15, color: keyboardbg);
   static TextStyle title = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
   static TextStyle subtitleMain = TextStyle(
     fontSize: 30,

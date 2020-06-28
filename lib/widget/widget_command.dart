@@ -1,5 +1,6 @@
 // AUTHENTICATION WIDGET
 import 'package:flutter/material.dart';
+import 'package:retrochat/utility/app_style.dart';
 import 'dart:async';
 
 import '../models/command.dart';
@@ -13,7 +14,7 @@ Widget getWidgetTextField(
     children: <Widget>[
       Text(
         '${command.prefixText}',
-        style: commandTextStyle(),
+        style: AppStyle.commandTextSyle,
       ),
       SizedBox(
         width: 8.0,
@@ -29,7 +30,7 @@ Widget getWidgetTextField(
           enabled: command.allowEditing,
           autocorrect: false,
           textCapitalization: TextCapitalization.none,
-          style: commandTextStyle(),
+          style: AppStyle.commandTextSyle,
           decoration: InputDecoration(
             border: InputBorder.none,
           ),
@@ -53,7 +54,7 @@ Widget getCommandTextField({
     children: <Widget>[
       Text(
         '${command.prefixText}',
-        style: commandTextStyle(),
+        style: AppStyle.commandTextSyle,
       ),
       SizedBox(
         width: 8.0,
@@ -80,7 +81,7 @@ Widget getCommandTextField({
                   autocorrect: false,
                   obscureText: obscureText,
                   textCapitalization: TextCapitalization.none,
-                  style: commandTextStyle(),
+                  style: AppStyle.commandTextSyle,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                   ),
@@ -94,10 +95,10 @@ Widget getCommandTextField({
   );
 }
 
-TextStyle commandTextStyle() {
-  return TextStyle(
-    color: Colors.white,
-    fontSize: 15.0,
-    fontFamily: 'Perfect DOS VGA',
-  );
-}
+//TextStyle commandTextStyle() {
+//  return TextStyle(
+//    color: AppStyle.keyboardbg,
+//    fontSize: 15.0,
+//    fontFamily: 'Perfect DOS VGA',
+//  );
+//}

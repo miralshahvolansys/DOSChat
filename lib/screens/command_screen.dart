@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:retrochat/utility/app_style.dart';
 import 'dart:async';
 
 import '../keyboard/virtual_keyboard.dart';
@@ -307,7 +308,6 @@ class _CommandScreenState extends State<CommandScreen> {
         } catch (err) {
           _addInfoTextInList(
               message: 'Invalid username! Please try with different username.');
-          _addCommandTextField(inputText: inputCommand);
         }
       }
     }
@@ -431,19 +431,20 @@ class _CommandScreenState extends State<CommandScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
                         '${command.prefixText} ${command.infoText}',
-                        style: commandTextStyle(),
+                        style: AppStyle.commandTextSyle,
                       ),
                     );
                   },
                 ),
               ),
               Container(
-                color: Colors.black,
+                color: AppStyle.keyboardbg ,
                 child: Visibility(
                   visible: isShowKeyboard,
                   child: VirtualKeyboard(
                       height: 300,
-                      textColor: Colors.white,
+                      fontSize: 23,
+                      textColor: Colors.black54 ,
                       type: VirtualKeyboardType.Alphanumeric,
                       onKeyPress: _onKeyPress),
                 ),

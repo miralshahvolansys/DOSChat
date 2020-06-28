@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:retrochat/utility/app_style.dart';
 
 class UserListWidget extends StatelessWidget {
   final String userNameList;
@@ -11,7 +12,7 @@ class UserListWidget extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: TextStyle(
-          color: Colors.white,
+          color: AppStyle.keyboardbg,
           wordSpacing: 10,
           height: 1.7,
           fontSize: 15.0,

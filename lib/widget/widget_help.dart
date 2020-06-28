@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:retrochat/utility/app_style.dart';
 
 class HelpWidget extends StatelessWidget {
   @override
@@ -73,11 +74,7 @@ class HelpChildWidget extends StatelessWidget {
           child: Text(
             text,
             textAlign: TextAlign.left,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 15.0,
-              fontFamily: 'Perfect DOS VGA',
-            ),
+            style: AppStyle.commandTextSyle,
           ),
         ),
       ],
