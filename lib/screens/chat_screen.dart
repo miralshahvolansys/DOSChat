@@ -36,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String keyChatRoom;
 
   ScrollController scrollListView = ScrollController();
-  bool isShowKeyboard = false;
+  bool isShowKeyboard = true;
   bool isShownNormalReloadWithTextField = true;
 
   // Holds the text that user typed.
@@ -48,6 +48,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
   TextEditingController textEnterMessage = TextEditingController();
   FocusNode focusNodeMessage = FocusNode();
+
+  double yPosition = 0;
+
+  double scrollHeight = 50;
+  double scrollWidth = 25;
+
+  double totalHeightScrollMain = 0;
+  double scrollContentSizeMain = 0;
 
   @override
   void initState() {
@@ -64,6 +72,20 @@ class _ChatScreenState extends State<ChatScreen> {
     focusNodeMessage.requestFocus();
     _events = StreamController<String>.broadcast();
     _events.add(keyForMe);
+
+    getManageSize();
+  }
+
+  void getManageSize() {
+    Future.delayed(const Duration(milliseconds: 50), () {
+      scrollContentSizeMain = (totalHeightScrollMain + scrollListView.position.maxScrollExtent);
+      double sizeGet =
+          scrollHeightManage(totalHeightScrollMain, scrollContentSizeMain);
+      setState(() {
+        scrollHeight = sizeGet > 15 ? sizeGet : 15;
+        yPosition = totalHeightScrollMain - scrollHeight;
+      });
+    });
   }
 
   @override
@@ -87,8 +109,9 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     Future.delayed(const Duration(milliseconds: 50), () {
       setState(() {
-        scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
+        scrollListView.jumpTo(scrollListView.position.maxScrollExtent - (isShowKeyboard ? 300 : 0));
         focusNodeMessage.requestFocus();
+        getManageSize();
       });
     });
   }
@@ -99,85 +122,177 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
-                child: ListView.builder(
-//                  physics: NeverScrollableScrollPhysics(),
-              controller: scrollListView,
-              itemCount: isShownNormalReloadWithTextField
-                  ? (listChatAllData.length + listChatCommand.length + 1)
-                  : 0,
-              itemBuilder: (context, index) {
-                if (index ==
-                    (listChatAllData.length + listChatCommand.length)) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isShowKeyboard = true;
-                          Future.delayed(const Duration(milliseconds: 50), () {
-                            setState(() {
-                              scrollListView.jumpTo(
-                                  scrollListView.position.maxScrollExtent);
-                              focusNodeMessage.requestFocus();
-                            });
-                          });
-                        });
-                      },
-                      child: AbsorbPointer(
-                        child: StreamBuilder(
-                            stream: _events.stream,
-                            builder: (BuildContext context, snapshot) {
-                              textEnterMessage.text = snapshot.data;
-                              textEnterMessage.selection =
-                                  TextSelection.fromPosition(TextPosition(
-                                      offset: textEnterMessage.text.length));
-                              return TextField(
-                                showCursor: true,
-                                readOnly: true,
-                                focusNode: focusNodeMessage,
-                                cursorColor: Colors.white,
-                                cursorWidth: 10,
-                                keyboardType: TextInputType.multiline,
-                                textInputAction: TextInputAction.done,
-                                maxLines: null,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18.0),
-                                controller: textEnterMessage,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Expanded(
+                      child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: scrollListView,
+                    itemCount: isShownNormalReloadWithTextField
+                        ? (listChatAllData.length + listChatCommand.length + 1)
+                        : 0,
+                    itemBuilder: (context, index) {
+                      if (index ==
+                          (listChatAllData.length + listChatCommand.length)) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isShowKeyboard = true;
+                                Future.delayed(const Duration(milliseconds: 50),
+                                    () {
+                                  setState(() {
+                                    scrollListView.jumpTo(scrollListView
+                                        .position.maxScrollExtent);
+                                    focusNodeMessage.requestFocus();
+                                    getManageSize();
+                                  });
+                                });
+                              });
+                            },
+                            child: AbsorbPointer(
+                              child: StreamBuilder(
+                                  stream: _events.stream,
+                                  builder: (BuildContext context, snapshot) {
+                                    textEnterMessage.text = snapshot.data;
+                                    textEnterMessage.selection =
+                                        TextSelection.fromPosition(TextPosition(
+                                            offset:
+                                                textEnterMessage.text.length));
+                                    return TextField(
+                                      showCursor: true,
+                                      readOnly: true,
+                                      focusNode: focusNodeMessage,
+                                      cursorColor: Colors.white,
+                                      cursorWidth: 10,
+                                      keyboardType: TextInputType.multiline,
+                                      textInputAction: TextInputAction.done,
+                                      maxLines: null,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18.0),
+                                      controller: textEnterMessage,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        );
+                      } else if (index >= listChatAllData.length) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                          child: Text(
+                            "${listChatCommand[index - listChatAllData.length].sender_id == "" ? keyForCommandPrecision : keyForMe}${listChatCommand[index - listChatAllData.length].message}",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 18.0),
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                          child: Text(
+                            precisionChatText(
+                                listChatAllData[index], userMine, userOther),
+                            style: TextStyle(
+                                color: isMyMessage(listChatAllData[index],
+                                        userMine, userOther)
+                                    ? Colors.white
+                                    : Colors.lightGreen,
+                                fontSize: 18.0),
+                          ),
+                        );
+                      }
+                    },
+                  )),
+                  Container(
+                    width: scrollWidth,
+                    color: Colors.grey.shade400,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            getUpDownMethod(
+                                true,
+                                totalHeightScrollMain,
+                                scrollListView.position.maxScrollExtent,
+                                scrollHeight,
+                                yPosition);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: scrollWidth,
+                            width: scrollWidth,
+                            color: Colors.grey.shade700,
+                            child: Icon(Icons.arrow_drop_up),
+                          ),
+                        ),
+                        Expanded(child: LayoutBuilder(builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          totalHeightScrollMain = constraints.maxHeight;
+                          return Stack(
+                            children: <Widget>[
+                              Positioned(
+                                top: yPosition,
+                                child: GestureDetector(
+                                  onPanUpdate: (tapInfo) {
+                                    var totalPoint =
+                                        yPosition + tapInfo.delta.dy;
+                                    setState(() {
+                                      yPosition = getCursorPoint(
+                                          yPosition,
+                                          totalPoint,
+                                          constraints.maxHeight,
+                                          scrollHeight);
+
+                                      scrollListView.jumpTo(
+                                          getScrollContentForJump(
+                                              constraints.maxHeight,
+                                              scrollListView
+                                                  .position.maxScrollExtent,
+                                              scrollHeight,
+                                              yPosition));
+                                    });
+                                  },
+                                  child: Container(
+                                    height: scrollHeight,
+                                    width: scrollWidth,
+                                    color: Colors.black87,
+                                  ),
                                 ),
-                              );
-                            }),
-                      ),
+                              ),
+                            ],
+                          );
+                        })),
+                        GestureDetector(
+                          onTap: () {
+                            getUpDownMethod(
+                                false,
+                                totalHeightScrollMain,
+                                scrollListView.position.maxScrollExtent,
+                                scrollHeight,
+                                yPosition);
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: scrollWidth,
+                            width: scrollWidth,
+                            color: Colors.grey.shade700,
+                            child: Icon(Icons.arrow_drop_down),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                } else if (index >= listChatAllData.length) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                    child: Text(
-                      "${listChatCommand[index - listChatAllData.length].sender_id == "" ? keyForCommandPrecision : keyForMe}${listChatCommand[index - listChatAllData.length].message}",
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
-                    ),
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                    child: Text(
-                      precisionChatText(
-                          listChatAllData[index], userMine, userOther),
-                      style: TextStyle(
-                          color: isMyMessage(
-                                  listChatAllData[index], userMine, userOther)
-                              ? Colors.white
-                              : Colors.lightGreen,
-                          fontSize: 18.0),
-                    ),
-                  );
-                }
-              },
-            )),
+                  ),
+                ],
+              ),
+            ),
             Container(
               color: Colors.black,
               child: Visibility(
@@ -219,6 +334,10 @@ class _ChatScreenState extends State<ChatScreen> {
           if (listChatCommand.length > 0) return;
           text = text + '\n';
           _events.add(text);
+          setState(() {
+            scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
+            getManageSize();
+          });
           break;
         case VirtualKeyboardKeyAction.Space:
           text = text + key.text;
@@ -229,6 +348,7 @@ class _ChatScreenState extends State<ChatScreen> {
           break;
         case VirtualKeyboardKeyAction.close:
           isShowKeyboard = false;
+          getManageSize();
           setState(() {});
           break;
         default:
@@ -246,6 +366,7 @@ class _ChatScreenState extends State<ChatScreen> {
               setState(() {
                 scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
                 focusNodeMessage.requestFocus();
+                getManageSize();
               });
             });
           });
@@ -256,6 +377,29 @@ class _ChatScreenState extends State<ChatScreen> {
         default:
       }
     }
+  }
+
+  void getUpDownMethod(
+      bool isUp,
+      double totalHeightScroll,
+      double scrollContentSize,
+      double scrollCurrentHeight,
+      double scrollCurrentPosition) {
+    double increOrDecre = 0;
+
+    if (isUp) {
+      increOrDecre = -10;
+    } else {
+      increOrDecre = 10;
+    }
+
+    setState(() {
+      yPosition = getCursorPoint(yPosition, (yPosition + increOrDecre),
+          totalHeightScroll, scrollCurrentHeight);
+
+      scrollListView.jumpTo(getScrollContentForJump(totalHeightScroll,
+          scrollListView.position.maxScrollExtent, scrollHeight, yPosition));
+    });
   }
 
   void getSendButtonFromKeyboard() {
@@ -296,10 +440,10 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         textEnterMessage.text = keyForMe;
         if (isShownNormalReloadWithTextField) {
-          Future.delayed(const Duration(milliseconds: 50), () {
+          Future.delayed(const Duration(milliseconds: 150), () {
             setState(() {
               scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
-              focusNodeMessage.requestFocus();
+              getManageSize();
             });
           });
         } else {
@@ -311,7 +455,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 setState(() {
                   scrollListView
                       .jumpTo(scrollListView.position.maxScrollExtent);
-                  focusNodeMessage.requestFocus();
+                  getManageSize();
                 });
               });
             });
