@@ -185,6 +185,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: VirtualKeyboard(
                       height: 300,
                       textColor: Colors.black54 ,
+                      fontSize: 23,
 //                  type: isNumericMode
 //                      ? VirtualKeyboardType.chatAlphanumeric
 //                      : VirtualKeyboardType.Alphanumeric,
