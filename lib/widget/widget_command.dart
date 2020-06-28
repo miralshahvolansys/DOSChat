@@ -73,6 +73,7 @@ Widget getCommandTextField({
                   controller: controller,
                   focusNode: focusNode,
                   showCursor: true,
+                  readOnly: true,
                   cursorWidth: 8,
                   cursorColor: Colors.white,
                   onSubmitted: onSubmitted,
