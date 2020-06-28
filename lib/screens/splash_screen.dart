@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -71,25 +72,43 @@ class _SplashState extends State<Splash> {
   }
 
   Widget build(BuildContext context) {
+
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
     return Material(
       type: MaterialType.transparency,
-      child: Container(
-          width: double.infinity,
-          child: Center(
-              child: AnimatedOpacity(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: queryData.size.width/4,
+          ),
+          AnimatedOpacity(
             opacity: _visible ? 1.0 : 0.7,
             duration: Duration(milliseconds: 500),
             child: Text(
               _loadingText + _loadingTextSuffix,
-              style: TextStyle(fontSize: 22, color: (Colors.grey),fontFamily: 'Perfect DOS VGA'),
-
-              /*Text(
-                'Roboto Mono sample',
-                style: TextStyle(fontFamily: 'RobotoMono'),
-              );*/
+              style: Theme.of(context).textTheme.headline6,
               textDirection: TextDirection.ltr,
+              textAlign: TextAlign.center,
             ),
-          ))),
+          ),
+        ],
+      ),
+     /* child: Center(
+          child: Expanded(flex: ,
+            child: AnimatedOpacity(
+              opacity: _visible ? 1.0 : 0.7,
+              duration: Duration(milliseconds: 500),
+              child: Text(
+                _loadingText + _loadingTextSuffix,
+                style: Theme.of(context).textTheme.headline6,
+                textDirection: TextDirection.ltr,
+                textAlign: TextAlign.left,
+              ),
+            ),
+          )
+      ),*/
     );
   }
 }
