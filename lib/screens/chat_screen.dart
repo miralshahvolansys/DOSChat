@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:retrochat/models/chatmodel.dart';
 import 'package:retrochat/api_manager/constant.dart';
 import 'package:retrochat/provider/user_provider.dart';
+import 'package:retrochat/utility/app_style.dart';
 import 'package:retrochat/utility/common_methods.dart';
 import 'package:retrochat/keyboard/virtual_keyboard.dart';
 
@@ -36,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String keyChatRoom;
 
   ScrollController scrollListView = ScrollController();
-  bool isShowKeyboard = false;
+  bool isShowKeyboard = true;
   bool isShownNormalReloadWithTextField = true;
 
   // Holds the text that user typed.
@@ -142,8 +143,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 keyboardType: TextInputType.multiline,
                                 textInputAction: TextInputAction.done,
                                 maxLines: null,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18.0),
+                                style:AppStyle.commandTextSyle,
                                 controller: textEnterMessage,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -158,7 +158,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                     child: Text(
                       "${listChatCommand[index - listChatAllData.length].sender_id == "" ? keyForCommandPrecision : keyForMe} ${listChatCommand[index - listChatAllData.length].message}",
-                      style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      style: AppStyle.commandTextSyle,
                     ),
                   );
                 } else {
@@ -170,21 +170,21 @@ class _ChatScreenState extends State<ChatScreen> {
                       style: TextStyle(
                           color: isMyMessage(
                                   listChatAllData[index], userMine, userOther)
-                              ? Colors.white
+                              ? AppStyle.keyboardbg
                               : Colors.lightGreen,
-                          fontSize: 18.0),
+                          fontSize: 15.0),
                     ),
                   );
                 }
               },
             )),
             Container(
-              color: Colors.black,
+              color: AppStyle.keyboardbg ,
               child: Visibility(
                   visible: isShowKeyboard,
                   child: VirtualKeyboard(
                       height: 300,
-                      textColor: Colors.white,
+                      textColor: Colors.black54 ,
 //                  type: isNumericMode
 //                      ? VirtualKeyboardType.chatAlphanumeric
 //                      : VirtualKeyboardType.Alphanumeric,
