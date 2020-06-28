@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:retrochat/provider/user_provider.dart';
 import 'package:retrochat/screens/chat_screen.dart';
 
 import '../api_manager/http_exception.dart';
@@ -270,7 +269,7 @@ class _CommandScreenState extends State<CommandScreen> {
           final loginUser = await auth.getLoginUser();
           if (loginUser != null && otherUser != null) {
             // REDIRECT TO CHAT SCREEN
-            /*Navigator.push(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => ChatScreen(
@@ -278,7 +277,7 @@ class _CommandScreenState extends State<CommandScreen> {
                   userOther: otherUser,
                 ),
               ),
-            );*/
+            );
           }
         } catch (err) {
           _addInfoTextInList(

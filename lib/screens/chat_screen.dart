@@ -268,7 +268,7 @@ class _ChatScreenState extends State<ChatScreen> {
       if (listChatCommand.length > 0) {
         switch (mainValue.toLowerCase()) {
           case "y":
-//            Navigator.pop(context);
+            Navigator.pop(context);
             return;
             break;
           case "n":
