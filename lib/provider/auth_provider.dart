@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:provider/provider.dart';
+import 'package:retrochat/provider/user_provider.dart';
 
 import '../api_manager/http_exception.dart';
 import '../api_manager/constant.dart' as CONSTANT;
@@ -9,6 +13,7 @@ class AuthProvider with ChangeNotifier {
   final _authInstance = FirebaseAuth.instance;
   AuthResult _authResult;
   FirebaseUser _authUser;
+  List<User> _users = [];
 
   FirebaseAuth get authInstance {
     return _authInstance;
@@ -18,12 +23,61 @@ class AuthProvider with ChangeNotifier {
     return '$username@gmail.com';
   }
 
+  List<User> get userList {
+    return [..._users];
+  }
+
+  String get userNames {
+    String userNameList = '';
+    _users.forEach((item) {
+      userNameList += item.userName + " ";
+    });
+    return userNameList;
+  }
+
   Future<String> getUsername() async {
     if (_authUser == null) {
       _authUser = await authInstance.currentUser();
     }
     final username = _authUser.email.split('@').first;
     return username;
+  }
+
+  Future<void> getUserList() async {
+    final userRef =
+        FirebaseDatabase.instance.reference().child(CONSTANT.firebaseNodeUser);
+    try {
+      final snapshot = await userRef.once();
+      if (snapshot.value != null) {
+        final values = snapshot.value;
+        values.forEach((userKey, userData) {
+          _users.add(User(
+            userId: userData['user_id'],
+            userName: userData['username'],
+          ));
+        });
+      }
+      userRef
+          .startAt(DateTime.now().toUtc().millisecondsSinceEpoch)
+          .onChildAdded
+          .listen(_addNewUser);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  void _addNewUser(Event event) {
+    final user = _getUserFromSnapshot(event.snapshot.value);
+
+    print('NEW USER ADDED :: ${user.userName}');
+    _users.add(user);
+  }
+
+  User _getUserFromSnapshot(dynamic values) {
+    return User(
+      userId: values['user_id'],
+      userName: values['username'],
+    );
   }
 
   Future<void> signIn({username: String, password: String}) async {

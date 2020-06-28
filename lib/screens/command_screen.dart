@@ -9,7 +9,6 @@ import '../widget/widget_help.dart';
 import '../utility/enum.dart';
 import '../api_manager/constant.dart' as CONSTANT;
 
-import '../provider/user_provider.dart';
 import '../widget/widget_user_list.dart';
 
 class CommandScreen extends StatefulWidget {
@@ -28,6 +27,7 @@ class _CommandScreenState extends State<CommandScreen> {
   final _commandController = TextEditingController();
 
   List<ModelCommand> arrCommand = [];
+  AuthProvider auth;
 
   @override
   void initState() {
@@ -39,6 +39,7 @@ class _CommandScreenState extends State<CommandScreen> {
           message: 'Welcome to Retro Chat. Start chatting with your friends.');
       _addCommandTextField();
     }
+    _fetchUser();
   }
 
   @override
@@ -49,10 +50,23 @@ class _CommandScreenState extends State<CommandScreen> {
     super.dispose();
   }
 
+  AuthProvider get _getAuth {
+    if (auth == null) {
+      auth = Provider.of<AuthProvider>(context, listen: false);
+    }
+    return auth;
+  }
+
+  _fetchUser() async {
+    final auth = _getAuth;
+    await auth.getUserList();
+    print(auth.userNames);
+  }
+
   // SIGN IN
   Future<void> _signIn() async {
     try {
-      final auth = Provider.of<AuthProvider>(context, listen: false);
+      final auth = _getAuth;
       await auth.signUp(
         username: _usernameController.text,
         password: _passwordController.text,
@@ -199,10 +213,7 @@ class _CommandScreenState extends State<CommandScreen> {
       arrCommand[index].infoText = command;
 
       _commandController.text = '';
-      //_addCommandTextField();
-      Future.delayed(const Duration(milliseconds: 200), () {
-        _addCommandTextField();
-      });
+      _addCommandTextField();
     }
   }
 
@@ -297,9 +308,7 @@ class _CommandScreenState extends State<CommandScreen> {
                       return getCommandListWidget();
                     } else if (command.commandType ==
                         eCommandType.ls_userlist) {
-                      return getUserListWidget(context, () {
-                        // _addCommandTextField();
-                      });
+                      return getUserListWidget(context);
                     }
                     // SHELL COMMAND
                     return Padding(
@@ -324,27 +333,31 @@ Widget getCommandListWidget() {
   return HelpWidget();
 }
 
-Widget getUserListWidget(BuildContext context, Function onComplete) {
-  final provider = Provider.of<UserList>(context, listen: false);
-  Future<String> _calculation = provider.fetchUserList();
-  return FutureBuilder<String>(
-    future: _calculation, // a Future<String> or null
-    builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-      switch (snapshot.connectionState) {
-        case ConnectionState.waiting:
-          return new Text('loading...', style: TextStyle(color: Colors.white));
-        case ConnectionState.done:
-          return new UserListWidget(
-            userNameList: '${snapshot.data}',
-          );
-        default:
-          if (snapshot.hasError)
-            return new Text('Error: ${snapshot.error}',
-                style: TextStyle(color: Colors.white));
-          else
-            return new Text('Result: ${snapshot.data}',
-                style: TextStyle(color: Colors.white));
-      }
-    },
+Widget getUserListWidget(BuildContext context) {
+  final auth = Provider.of<AuthProvider>(context, listen: false);
+  return new UserListWidget(
+    userNameList: '${auth.userNames}',
   );
+
+  // Future<String> _calculation = provider.fetchUserList();
+  // return FutureBuilder<String>(
+  //   future: _calculation, // a Future<String> or null
+  //   builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+  //     switch (snapshot.connectionState) {
+  //       case ConnectionState.waiting:
+  //         return new Text('loading...', style: TextStyle(color: Colors.white));
+  //       case ConnectionState.done:
+  //         return new UserListWidget(
+  //           userNameList: '${snapshot.data}',
+  //         );
+  //       default:
+  //         if (snapshot.hasError)
+  //           return new Text('Error: ${snapshot.error}',
+  //               style: TextStyle(color: Colors.white));
+  //         else
+  //           return new Text('Result: ${snapshot.data}',
+  //               style: TextStyle(color: Colors.white));
+  //     }
+  //   },
+  // );
 }
