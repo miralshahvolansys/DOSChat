@@ -82,8 +82,8 @@ class _CommandScreenState extends State<CommandScreen> {
 
   _setInitialData() {
     String infoMessage = '';
-      infoMessage =
-          'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type \'help\' to see available commands and start over.';
+    infoMessage =
+        'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type \'help\' to see available commands and start over.';
 
     _addInfoTextInList(message: infoMessage);
     _addCommandTextField();
@@ -199,6 +199,7 @@ class _CommandScreenState extends State<CommandScreen> {
     }
     setState(() {
       arrCommand.add(obj);
+      isShowKeyboard = true;
     });
   }
 
@@ -281,31 +282,39 @@ class _CommandScreenState extends State<CommandScreen> {
 
   _startChat({String inputCommand}) async {
     _addInfoTextInList(message: inputCommand);
-    if (inputCommand.trim().length > 0) {
-      final username = inputCommand.split(' ').last;
-      if (username != null) {
-        final auth = _getAuth;
-        try {
-          final otherUser = auth.userList.firstWhere((element) =>
-              element.userName.toLowerCase() == username.toLowerCase());
-          final loginUser = await auth.getLoginUser();
-          if (loginUser != null && otherUser != null) {
-            // REDIRECT TO CHAT SCREEN
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                  userMine: loginUser,
-                  userOther: otherUser,
+    final isLoggedIn =
+        await Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+    if (isLoggedIn) {
+      _addInfoTextInList(message: inputCommand);
+      if (inputCommand.trim().length > 0) {
+        final username = inputCommand.split(' ').last;
+        if (username != null) {
+          final auth = _getAuth;
+          try {
+            final otherUser = auth.userList.firstWhere((element) =>
+                element.userName.toLowerCase() == username.toLowerCase());
+            final loginUser = await auth.getLoginUserObject();
+            if (loginUser != null && otherUser != null) {
+              // REDIRECT TO CHAT SCREEN
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                    userMine: loginUser,
+                    userOther: otherUser,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+          } catch (err) {
+            _addInfoTextInList(
+                message:
+                    'Invalid username! Please try with different username.');
           }
-        } catch (err) {
-          _addInfoTextInList(
-              message: 'Invalid username! Please try with different username.');
         }
       }
+    } else {
+      _addInfoTextInList(message: 'Please login to start chat.');
     }
   }
 
@@ -371,6 +380,19 @@ class _CommandScreenState extends State<CommandScreen> {
     arrCommand[index].prefixText = 'C:\\ $postFixText >';
   }
 
+  _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 40), () {
+      setState(() {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+        focusNodeCommand.requestFocus();
+      });
+    });
+  }
+
   // BUILD METHOD
   @override
   Widget build(BuildContext context) {
@@ -386,14 +408,14 @@ class _CommandScreenState extends State<CommandScreen> {
       // ),
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 8.0,
-          ),
-          child: Column(
-            children: <Widget>[
-              Expanded(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8.0,
+                ),
                 child: ListView.builder(
                   itemCount: arrCommand.length,
                   controller: _scrollController,
@@ -401,6 +423,7 @@ class _CommandScreenState extends State<CommandScreen> {
                     final command = arrCommand[index];
                     if (command.inputType == eInputType.commandTextField) {
                       _command = command;
+                      FocusScope.of(context).requestFocus(focusNodeCommand);
                       return getCommandTextField(
                           command: command,
                           controller: _commandController,
@@ -410,11 +433,12 @@ class _CommandScreenState extends State<CommandScreen> {
                           event: _events,
                           onSubmitted: (text) {},
                           onTap: () {
-                            FocusScope.of(context)
-                                .requestFocus(focusNodeCommand);
                             setState(() {
                               isShowKeyboard = true;
                             });
+                            FocusScope.of(context)
+                                .requestFocus(focusNodeCommand);
+                            _scrollToBottom();
                           });
                     } else if (command.commandType == eCommandType.help) {
                       return getCommandListWidget();
@@ -433,20 +457,20 @@ class _CommandScreenState extends State<CommandScreen> {
                   },
                 ),
               ),
-              Container(
-                color: AppStyle.keyboardbg ,
-                child: Visibility(
-                  visible: isShowKeyboard,
-                  child: VirtualKeyboard(
-                      height: 300,
-                      fontSize: 23,
-                      textColor: Colors.black54 ,
-                      type: VirtualKeyboardType.Alphanumeric,
-                      onKeyPress: _onKeyPress),
-                ),
+            ),
+            Container(
+              color: AppStyle.keyboardbg,
+              child: Visibility(
+                visible: isShowKeyboard,
+                child: VirtualKeyboard(
+                    height: 300,
+                    fontSize: 23,
+                    textColor: Colors.black54,
+                    type: VirtualKeyboardType.Alphanumeric,
+                    onKeyPress: _onKeyPress),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -501,17 +525,7 @@ class _CommandScreenState extends State<CommandScreen> {
             }
           }
           text = '';
-          Future.delayed(const Duration(milliseconds: 40), () {
-            setState(() {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: Duration(milliseconds: 100),
-                curve: Curves.easeInOut,
-              );
-              //_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-              focusNodeCommand.requestFocus();
-            });
-          });
+          _scrollToBottom();
           break;
         case VirtualKeyboardKeyAction.Space:
           text = text + key.text;

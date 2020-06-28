@@ -31,11 +31,11 @@ class HelpWidget extends StatelessWidget {
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'signin - sign in using the username.',
+            text: 'signin - Sign in using the username.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'signup - create a new user.',
+            text: 'signup - Create a new user.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
@@ -44,11 +44,16 @@ class HelpWidget extends StatelessWidget {
           ),
           HelpChildWidget(
             text:
-                'clear -  use to remove all previous commands and output from screen.',
+                'start chat - Start chat with user. e.g. start chat (username)',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'exit - logout current user.',
+            text:
+                'clear -  Use to remove all previous commands and output from screen.',
+            leftPadding: EdgeInsets.only(left: 15),
+          ),
+          HelpChildWidget(
+            text: 'exit - Logout current user.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
         ],
