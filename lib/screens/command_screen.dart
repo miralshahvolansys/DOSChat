@@ -199,6 +199,7 @@ class _CommandScreenState extends State<CommandScreen> {
     }
     setState(() {
       arrCommand.add(obj);
+      isShowKeyboard = true;
     });
   }
 
@@ -371,6 +372,19 @@ class _CommandScreenState extends State<CommandScreen> {
     arrCommand[index].prefixText = 'C:\\ $postFixText >';
   }
 
+  _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 40), () {
+      setState(() {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+        focusNodeCommand.requestFocus();
+      });
+    });
+  }
+
   // BUILD METHOD
   @override
   Widget build(BuildContext context) {
@@ -386,14 +400,14 @@ class _CommandScreenState extends State<CommandScreen> {
       // ),
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 8.0,
-          ),
-          child: Column(
-            children: <Widget>[
-              Expanded(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8.0,
+                ),
                 child: ListView.builder(
                   itemCount: arrCommand.length,
                   controller: _scrollController,
@@ -401,6 +415,7 @@ class _CommandScreenState extends State<CommandScreen> {
                     final command = arrCommand[index];
                     if (command.inputType == eInputType.commandTextField) {
                       _command = command;
+                      FocusScope.of(context).requestFocus(focusNodeCommand);
                       return getCommandTextField(
                           command: command,
                           controller: _commandController,
@@ -410,11 +425,12 @@ class _CommandScreenState extends State<CommandScreen> {
                           event: _events,
                           onSubmitted: (text) {},
                           onTap: () {
-                            FocusScope.of(context)
-                                .requestFocus(focusNodeCommand);
                             setState(() {
                               isShowKeyboard = true;
                             });
+                            FocusScope.of(context)
+                                .requestFocus(focusNodeCommand);
+                            _scrollToBottom();
                           });
                     } else if (command.commandType == eCommandType.help) {
                       return getCommandListWidget();
@@ -433,20 +449,20 @@ class _CommandScreenState extends State<CommandScreen> {
                   },
                 ),
               ),
-              Container(
-                color: AppStyle.keyboardbg,
-                child: Visibility(
-                  visible: isShowKeyboard,
-                  child: VirtualKeyboard(
-                      height: 300,
-                      fontSize: 23,
-                      textColor: Colors.black54,
-                      type: VirtualKeyboardType.Alphanumeric,
-                      onKeyPress: _onKeyPress),
-                ),
+            ),
+            Container(
+              color: AppStyle.keyboardbg,
+              child: Visibility(
+                visible: isShowKeyboard,
+                child: VirtualKeyboard(
+                    height: 300,
+                    fontSize: 23,
+                    textColor: Colors.black54,
+                    type: VirtualKeyboardType.Alphanumeric,
+                    onKeyPress: _onKeyPress),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -501,17 +517,7 @@ class _CommandScreenState extends State<CommandScreen> {
             }
           }
           text = '';
-          Future.delayed(const Duration(milliseconds: 40), () {
-            setState(() {
-              _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: Duration(milliseconds: 100),
-                curve: Curves.easeInOut,
-              );
-              //_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-              focusNodeCommand.requestFocus();
-            });
-          });
+          _scrollToBottom();
           break;
         case VirtualKeyboardKeyAction.Space:
           text = text + key.text;
