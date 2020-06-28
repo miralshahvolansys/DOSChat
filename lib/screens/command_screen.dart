@@ -285,7 +285,6 @@ class _CommandScreenState extends State<CommandScreen> {
     final isLoggedIn =
         await Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (isLoggedIn) {
-      _addInfoTextInList(message: inputCommand);
       if (inputCommand.trim().length > 0) {
         final username = inputCommand.split(' ').last;
         if (username != null) {
