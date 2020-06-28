@@ -44,25 +44,23 @@ class MyApp extends StatelessWidget {
           stream: FirebaseAuth.instance.onAuthStateChanged,
           builder: (sbContext, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Splash();
-              /* Center(
-                child: Scaffold(
-                  body: Text('Loading...'),
-                ),
-              );*/
+              return Splash(
+                isLogin: false,
+              );
             } else {
               print('HAS DATA ${snapshot.hasData}');
               isLoggedIn = snapshot.hasData;
-              return Splash();
-                /*CommandScreen(
-                isLoggedIn: snapshot.hasData,
-              );*/
+              return Splash(
+                isLogin: snapshot.hasData,
+              );
             }
           },
         ),
         debugShowCheckedModeBanner: false,
         routes: {
-          CommandScreen.routeName: (cntx) => CommandScreen(isLoggedIn: isLoggedIn,),
+          CommandScreen.routeName: (cntx) => CommandScreen(
+                isLoggedIn: isLoggedIn,
+              ),
           Splash.routeName: (cntx) => Splash(),
         },
       ),

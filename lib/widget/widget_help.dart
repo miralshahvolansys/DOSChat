@@ -25,6 +25,14 @@ class HelpWidget extends StatelessWidget {
             height: 12,
           ),
           HelpChildWidget(
+            text: 'signup | Create a new user.',
+            leftPadding: EdgeInsets.only(left: 15),
+          ),
+          HelpChildWidget(
+            text: 'signin | Signin with exsting user.',
+            leftPadding: EdgeInsets.only(left: 15),
+          ),
+          HelpChildWidget(
             text: 'ls userlist | Display the list of users.',
             leftPadding: EdgeInsets.only(left: 15),
           ),

@@ -42,6 +42,7 @@ Widget getWidgetTextField(
 Widget getCommandTextField({
   ModelCommand command,
   TextEditingController controller,
+  bool obscureText = false,
   Function(String) onSubmitted,
 }) {
   return Row(
@@ -61,6 +62,7 @@ Widget getCommandTextField({
           cursorColor: Colors.white,
           onSubmitted: onSubmitted,
           autocorrect: false,
+          obscureText: obscureText,
           textCapitalization: TextCapitalization.none,
           style: commandTextStyle(),
           decoration: InputDecoration(
@@ -75,6 +77,7 @@ Widget getCommandTextField({
 TextStyle commandTextStyle() {
   return TextStyle(
     color: Colors.white,
-    fontSize: 12.0,
+    fontSize: 14.0,
+    fontFamily: 'Perfect DOS VGA',
   );
 }

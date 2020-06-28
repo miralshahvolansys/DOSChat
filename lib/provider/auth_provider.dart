@@ -4,18 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:retrochat/provider/user_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_manager/http_exception.dart';
 import '../api_manager/constant.dart' as CONSTANT;
 
 class AuthProvider with ChangeNotifier {
   final _authInstance = FirebaseAuth.instance;
-  AuthResult _authResult;
-  FirebaseUser _authUser;
   List<User> _users = [];
+
+  Future<String> getUsername() async {
+    final pref = await SharedPreferences.getInstance();
+    final username = pref.getString(CONSTANT.username);
+    return username;
+  }
 
   FirebaseAuth get authInstance {
     return _authInstance;
+  }
+
+  Future<bool> isLoggedIn() async {
+    final pref = await SharedPreferences.getInstance();
+    final username = pref.getString(CONSTANT.username);
+    return username == null ? false : true;
   }
 
   String _getEmailFromUsername(String username) {
@@ -43,14 +54,6 @@ class AuthProvider with ChangeNotifier {
       userNameList += item.userName + " ";
     });
     return userNameList;
-  }
-
-  Future<String> getUsername() async {
-    if (_authUser == null) {
-      _authUser = await authInstance.currentUser();
-    }
-    final username = _authUser.email.split('@').first;
-    return username;
   }
 
   Future<void> getUserList() async {
@@ -97,24 +100,23 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signIn({username: String, password: String}) async {
     try {
-      _authResult = await _authInstance.signInWithEmailAndPassword(
+      final authResult = await _authInstance.signInWithEmailAndPassword(
         email: _getEmailFromUsername(username),
         password: password,
       );
-      if (_authResult != null) {
-        print(_authResult);
+      if (authResult != null) {
+        final preference = await SharedPreferences.getInstance();
+        preference.setString(CONSTANT.username, username);
         notifyListeners();
       }
     } catch (err) {
-      throw HTTPException(errorMessage: 'Invalid credentials!');
+      throw HTTPException(errorMessage: err.toString());
     }
   }
 
   Future<void> signUp({username: String, password: String}) async {
-    AuthResult authResult;
-
     try {
-      authResult = await _authInstance.createUserWithEmailAndPassword(
+      final authResult = await _authInstance.createUserWithEmailAndPassword(
         email: _getEmailFromUsername(username),
         password: password,
       );
@@ -122,22 +124,23 @@ class AuthProvider with ChangeNotifier {
       if (authResult != null) {
         try {
           _storeUserInFirebase(userID: authResult.user.uid, username: username);
+          final preference = await SharedPreferences.getInstance();
+          preference.setString(CONSTANT.username, username);
           notifyListeners();
         } catch (err) {
           throw HTTPException(errorMessage: err.toString());
         }
       }
     } catch (err) {
-      if (err.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        await signIn(username: username, password: password);
-      } else {
-        throw HTTPException(errorMessage: err.toString());
-      }
+      throw HTTPException(errorMessage: err.toString());
     }
   }
 
   Future<void> signOut() async {
-    _authUser = null;
+    _users = [];
+    final pref = await SharedPreferences.getInstance();
+    pref.clear();
+    _authInstance.signOut();
     await FirebaseAuth.instance.signOut();
   }
 

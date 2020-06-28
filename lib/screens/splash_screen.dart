@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:retrochat/screens/command_screen.dart';
 
 class Splash extends StatefulWidget {
+  final bool isLogin;
+  Splash({this.isLogin});
 
   @override
   _SplashState createState() => _SplashState();
@@ -49,7 +51,16 @@ class _SplashState extends State<Splash> {
 
           if (_start < 1) {
             timer.cancel();
-            Navigator.popAndPushNamed(context, CommandScreen.routeName);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (ctx) {
+                  return CommandScreen(
+                    isLoggedIn: widget.isLogin,
+                  );
+                },
+              ),
+            );
+            //Navigator.popAndPushNamed(context, CommandScreen.routeName);
           } else {
             _start = _start - 1;
           }
@@ -81,7 +92,10 @@ class _SplashState extends State<Splash> {
             duration: Duration(milliseconds: 500),
             child: Text(
               _loadingText + _loadingTextSuffix,
-              style: TextStyle(fontSize: 22, color: (Colors.grey),fontFamily: 'Perfect DOS VGA'),
+              style: TextStyle(
+                  fontSize: 22,
+                  color: (Colors.grey),
+                  fontFamily: 'Perfect DOS VGA'),
 
               /*Text(
                 'Roboto Mono sample',

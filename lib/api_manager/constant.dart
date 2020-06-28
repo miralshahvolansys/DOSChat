@@ -32,4 +32,17 @@ const ls_userlist = 'ls userlist';
 const startChat = 'start chat';
 const exit = 'exit';
 const clear = 'clear';
-const createUser = 'create user';
+const signup = 'signup';
+const signin = 'signin';
+
+const username = 'username';
+
+// APPLICATION COMMAND
+List<String> helpCommands = [
+  signup,
+  signin,
+  ls_userlist,
+  startChat,
+  exit,
+  clear,
+];
