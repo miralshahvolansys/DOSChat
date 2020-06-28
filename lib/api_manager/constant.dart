@@ -25,6 +25,10 @@ const keySenderName = 'sender_name';
 const keyTimeStamp = 'timestamp';
 const keyReceiverName = 'receiver_name';
 const keyMessage = 'message';
+const keyForMe = 'Me:> ';
+const keyForCommandPrecision = "C:/>";
+const keyForExit = "Do you want to exit chat(y/n)?";
+const keyForCommandNotFound = "Command not found...";
 
 // COMMAND CONSTANT
 const help = 'help';
@@ -46,3 +50,4 @@ List<String> helpCommands = [
   exit,
   clear,
 ];
+const createUser = 'create user';

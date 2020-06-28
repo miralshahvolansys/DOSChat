@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:retrochat/keyboard/virtual_keyboard.dart';
+
 import 'package:flutter/material.dart';
+
+import 'virtual_keyboard.dart';
 
 //void main() => runApp(MyApp());
 
@@ -60,28 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             Text(text, style: Theme.of(context).textTheme.display1),
-//            Focus(
-//              child:TextField(
-//                  onChanged: (text) {
-//                    print(text);
-//                    TextSelection previousSelection = controller.selection;
-//                    controller.text = text;
-//                    controller.selection = previousSelection;
-//                  },
-//                  cursorWidth: 10,
-//                  controller: controller,
-//                  showCursor: true,
-//                  readOnly: true,
-//                  decoration: InputDecoration(
-//                      border: OutlineInputBorder()
-//                  )
-//              ),
-//              onFocusChange: (hasFocus) {
-//                setState(() {
-//                  isShowKeyboard = hasFocus;
-//                });
-//              },
-//            ),
             SizedBox(
               height: 20,
             ),
@@ -114,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         showCursor: true,
                         readOnly: true,
                         decoration:
-                            InputDecoration(border: OutlineInputBorder()));
+                        InputDecoration(border: OutlineInputBorder()));
                   },
                 ),
               ),
@@ -145,29 +125,26 @@ class _MyHomePageState extends State<MyHomePage> {
   _onKeyPress(VirtualKeyboardKey key) {
     if (key.keyType == VirtualKeyboardKeyType.String) {
       text = text + (shiftEnabled ? key.capsText : key.text);
+      _events.add(text);
     } else if (key.keyType == VirtualKeyboardKeyType.Action) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.Backspace:
           if (text.length == 0) return;
           text = text.substring(0, text.length - 1);
+          _events.add(text);
           break;
         case VirtualKeyboardKeyAction.Return:
           text = text + '\n';
+          _events.add(text);
           break;
         case VirtualKeyboardKeyAction.Space:
           text = text + key.text;
+          _events.add(text);
           break;
         case VirtualKeyboardKeyAction.Shift:
           shiftEnabled = !shiftEnabled;
           break;
-        case VirtualKeyboardKeyAction.escape:
-//          FocusScope.of(context).unfocus();
-          isShowKeyboard = false;
-          setState(() {});
-          break;
         case VirtualKeyboardKeyAction.close:
-//          FocusScope.of(context).unfocus();
-//          fntwo.unfocus();
           isShowKeyboard = false;
           setState(() {});
           break;
@@ -178,14 +155,11 @@ class _MyHomePageState extends State<MyHomePage> {
         case VirtualKeyboardKeyAction.escape:
           print("Escape");
           break;
+        case VirtualKeyboardKeyAction.send:
+          print("Send");
+          break;
         default:
       }
     }
-    // Update the screen
-    _events.add(text);
-//    setState(() {
-//      controller.text = text;
-//      controller.selection = TextSelection.fromPosition(TextPosition(offset: controller.text.length));
-//    });
   }
 }

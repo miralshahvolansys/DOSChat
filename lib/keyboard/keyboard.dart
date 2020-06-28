@@ -1,5 +1,7 @@
 part of virtual_keyboard;
 
+
+
 /// The default keyboard height. Can we overriden by passing
 ///  `height` argument to `VirtualKeyboard` widget.
 const double _virtualKeyboardDefaultHeight = 300;
@@ -29,19 +31,18 @@ class VirtualKeyboard extends StatefulWidget {
   /// Set to true if you want only to show Caps letters.
   final bool alwaysCaps;
 
-  final Function(String) obSubmitted;
-
-  VirtualKeyboard({
-    Key key,
-    @required this.type,
-    @required this.onKeyPress,
-    this.builder,
-    this.height = _virtualKeyboardDefaultHeight,
-    this.textColor = Colors.black,
-    this.fontSize = 14,
-    this.alwaysCaps = false,
-    this.obSubmitted,
-  }) : super(key: key);
+   final Function(String) onSubmited;
+  VirtualKeyboard(
+      {Key key,
+      @required this.type,
+      @required this.onKeyPress,
+      this.builder,
+      this.height = _virtualKeyboardDefaultHeight,
+      this.textColor = Colors.black,
+      this.fontSize = 14,
+      this.alwaysCaps = false,
+      this.onSubmited})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -60,7 +61,6 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
   Color textColor;
   double fontSize;
   bool alwaysCaps;
-
   // Text Style for keys.
   TextStyle textStyle;
 
@@ -167,6 +167,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 
               Widget keyWidget;
 
+
               // Check if builder is specified.
               // Call builder function if specified or use default
               //  Key widgets if not.
@@ -182,7 +183,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
                     keyWidget = _keyboardDefaultActionKey(virtualKeyboardKey);
                     break;
                   case VirtualKeyboardKeyType.Hybrid:
-                    // Draw action key.
+                  // Draw action key.
                     keyWidget = _keyboardDefaultKey(virtualKeyboardKey);
                     break;
                 }
@@ -273,8 +274,22 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
 //      case VirtualKeyboardKeyAction.escape:
 //        actionKey = Icon(Icons.exit_to_app, color: textColor);
 //        break;
+//      case VirtualKeyboardKeyAction.close:
+//       actionKey = IconButton(
+//            icon: Icon(
+//              Icons.keyboard,
+//              color: textColor,
+//            ),
+//            onPressed: () {
+//              widget.onSubmited(key.text);
+//            });
+//        break;
       case VirtualKeyboardKeyAction.close:
-        actionKey = Icon(Icons.keyboard, color: textColor);
+       actionKey = Icon(
+
+              Icons.keyboard,
+              color: textColor,
+            );
         break;
       case VirtualKeyboardKeyAction.Return:
         actionKey = Icon(
