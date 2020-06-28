@@ -59,7 +59,7 @@ class AuthProvider with ChangeNotifier {
   Future<User> getLoginUserObject() async {
     final pref = await SharedPreferences.getInstance();
     final username = pref.getString(CONSTANT.username);
-    final userid = pref.getString(CONSTANT.userid);
+    final userid = pref.getString(CONSTANT.user_id);
 
     return User(userId: userid, userName: username);
   }
@@ -124,7 +124,7 @@ class AuthProvider with ChangeNotifier {
       if (authResult != null) {
         final preference = await SharedPreferences.getInstance();
         preference.setString(CONSTANT.username, username);
-        preference.setString(CONSTANT.userid, authResult.user.uid);
+        preference.setString(CONSTANT.user_id, authResult.user.uid);
         _users.removeWhere((element) => element.userName == username);
         notifyListeners();
       }
@@ -145,7 +145,7 @@ class AuthProvider with ChangeNotifier {
           _storeUserInFirebase(userID: authResult.user.uid, username: username);
           final preference = await SharedPreferences.getInstance();
           preference.setString(CONSTANT.username, username);
-          preference.setString(CONSTANT.userid, authResult.user.uid);
+          preference.setString(CONSTANT.user_id, authResult.user.uid);
           _users.removeWhere((element) => element.userName == username);
           notifyListeners();
         } catch (err) {
