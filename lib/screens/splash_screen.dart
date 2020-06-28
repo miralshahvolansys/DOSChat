@@ -2,6 +2,8 @@ import 'dart:ffi';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:retrochat/provider/auth_provider.dart';
 import 'dart:async';
 import 'package:retrochat/screens/command_screen.dart';
 
@@ -30,7 +32,7 @@ class _SplashState extends State<Splash> {
         () {
           _visible = !_visible;
 
-           if (_start == 5) {
+          if (_start == 5) {
             _loadingTextSuffix = ".";
           } else if (_start == 4) {
             _loadingTextSuffix = "..";

@@ -494,6 +494,10 @@ class _CommandScreenState extends State<CommandScreen> {
             } else if (_command.commandType == eCommandType.exit) {
               if (trimmedText.toLowerCase() == 'y') {
                 _handleLogout();
+              } else if (trimmedText.toLowerCase() == 'n') {
+                _addInfoTextInList(message: 'n');
+              } else {
+                _handleInputCommand(inputCommand: trimmedText);
               }
             } else {
               _handleInputCommand(inputCommand: trimmedText);
