@@ -86,12 +86,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       listChatAllData.add(objChat);
     });
-    Future.delayed(const Duration(milliseconds: 50), () {
-      setState(() {
-        scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
-        focusNodeMessage.requestFocus();
-      });
-    });
+    _scrollToBottom();
   }
 
   @override
@@ -119,13 +114,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       onTap: () {
                         setState(() {
                           isShowKeyboard = true;
-                          Future.delayed(const Duration(milliseconds: 50), () {
-                            setState(() {
-                              scrollListView.jumpTo(
-                                  scrollListView.position.maxScrollExtent);
-                              focusNodeMessage.requestFocus();
-                            });
-                          });
+                          _scrollToBottom();
                         });
                       },
                       child: AbsorbPointer(
@@ -201,6 +190,19 @@ class _ChatScreenState extends State<ChatScreen> {
     ),);
   }
 
+  _scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 40), () {
+      setState(() {
+        scrollListView.animateTo(
+          scrollListView.position.maxScrollExtent,
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+        focusNodeMessage.requestFocus();
+      });
+    });
+  }
+
   /// Fired when the virtual keyboard key is pressed.
   _onKeyPress(VirtualKeyboardKey key) {
     if (key.keyType == VirtualKeyboardKeyType.String) {
@@ -246,12 +248,7 @@ class _ChatScreenState extends State<ChatScreen> {
           setState(() {
             listChatCommand.add(Chat(
                 "", keyForExit, "${DateTime.now().millisecondsSinceEpoch}"));
-            Future.delayed(const Duration(milliseconds: 50), () {
-              setState(() {
-                scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
-                focusNodeMessage.requestFocus();
-              });
-            });
+            _scrollToBottom();
           });
           break;
         case VirtualKeyboardKeyAction.send:
@@ -300,24 +297,13 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         textEnterMessage.text = keyForMe;
         if (isShownNormalReloadWithTextField) {
-          Future.delayed(const Duration(milliseconds: 50), () {
-            setState(() {
-              scrollListView.jumpTo(scrollListView.position.maxScrollExtent);
-              focusNodeMessage.requestFocus();
-            });
-          });
+          _scrollToBottom();
         } else {
           Future.delayed(const Duration(milliseconds: 50), () {
             setState(() {
               isShownNormalReloadWithTextField = true;
               listChatAllData = List.from(listChatAllDataTempStore);
-              Future.delayed(const Duration(milliseconds: 50), () {
-                setState(() {
-                  scrollListView
-                      .jumpTo(scrollListView.position.maxScrollExtent);
-                  focusNodeMessage.requestFocus();
-                });
-              });
+              _scrollToBottom();
             });
           });
         }
