@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
               print('HAS DATA ${snapshot.hasData}');
               isLoggedIn = snapshot.hasData;
               return Splash();
-                /*CommandScreen(
+              /*CommandScreen(
                 isLoggedIn: snapshot.hasData,
               );*/
             }

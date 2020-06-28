@@ -54,6 +54,7 @@ const List<List> _keyRows = [
     ',',
     '.',
     '/',
+    '?',
   ],
   // Row 5
   const [
@@ -173,7 +174,7 @@ List<VirtualKeyboardKey> _getKeyboardRowKeys(rowNum) {
   return List.generate(_keyRows[rowNum].length, (int keyNum) {
     // Get key string value.
     String key = _keyRows[rowNum][keyNum];
-    print( _keyRows[rowNum]);
+//    print( _keyRows[rowNum]);
     // Create and return new VirtualKeyboardKey object.
     return VirtualKeyboardKey(
       text: key,
@@ -268,6 +269,11 @@ List<List<VirtualKeyboardKey>> _getKeyboardRows() {
             text: 'Esc',
             capsText: 'Esc',
             action: VirtualKeyboardKeyAction.escape));
+        rowKeys.add(  VirtualKeyboardKey(
+            keyType: VirtualKeyboardKeyType.Hybrid,
+            text: 'Send',
+            capsText: 'SEND',
+            action: VirtualKeyboardKeyAction.send));
         // Insert the space key into second position of row.
 //        rowKeys.insert(
 //          1,
