@@ -207,7 +207,7 @@ class _CommandScreenState extends State<CommandScreen> {
       case CONSTANT.help:
         _showAllCommandList(inputCommand: inputCommand);
         break;
-      case CONSTANT.ls_userlist:
+      case CONSTANT.ls:
         _showUserList(inputCommand: inputCommand);
         break;
       case CONSTANT.startChat:
@@ -244,8 +244,8 @@ class _CommandScreenState extends State<CommandScreen> {
       return CONSTANT.signup;
     } else if (inputCommand.contains(CONSTANT.signin) && arr.length == 1) {
       return CONSTANT.signin;
-    } else if (inputCommand.contains(CONSTANT.ls_userlist) && arr.length == 2) {
-      return CONSTANT.ls_userlist;
+    } else if (inputCommand.contains(CONSTANT.ls) && arr.length == 1) {
+      return CONSTANT.ls;
     } else if (inputCommand.contains(CONSTANT.startChat) && arr.length == 3) {
       return CONSTANT.startChat;
     } else if (inputCommand.contains(CONSTANT.clear) && arr.length == 1) {

@@ -32,7 +32,7 @@ const keyForCommandNotFound = "Command not found...";
 
 // COMMAND CONSTANT
 const help = 'help';
-const ls_userlist = 'ls userlist';
+const ls = 'ls';
 const startChat = 'start chat';
 const exit = 'exit';
 const clear = 'clear';
@@ -45,7 +45,7 @@ const username = 'username';
 List<String> helpCommands = [
   signup,
   signin,
-  ls_userlist,
+  ls,
   startChat,
   exit,
   clear,
