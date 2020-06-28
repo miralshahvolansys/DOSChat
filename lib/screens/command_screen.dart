@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 
-import 'package:retrochat/screens/chat_screen.dart';
+import '../keyboard/virtual_keyboard.dart';
+import '../screens/chat_screen.dart';
 import '../api_manager/http_exception.dart';
 import '../widget/widget_command.dart';
 import '../provider/auth_provider.dart';
@@ -35,14 +37,28 @@ class _CommandScreenState extends State<CommandScreen> {
   AuthProvider auth;
   eCurrentCommandType _currentCommandType = eCurrentCommandType.none;
 
+  // KEYBOARD
+  ScrollController _scrollController = ScrollController();
+  bool isShowKeyboard = false;
+  // Holds the text that user typed.
+  StreamController<String> _events;
+  // True if shift enabled.
+  bool shiftEnabled = false;
+  String text = '';
+  FocusNode focusNodeCommand = FocusNode();
+  ModelCommand _command;
+
   @override
   void initState() {
     super.initState();
+
+    _events = StreamController<String>.broadcast();
     _fetchUser();
   }
 
   @override
   void dispose() {
+    _events.close();
     _usernameController.dispose();
     _passwordController.dispose();
     _commandController.dispose();
@@ -384,47 +400,26 @@ class _CommandScreenState extends State<CommandScreen> {
               Expanded(
                 child: ListView.builder(
                   itemCount: arrCommand.length,
+                  controller: _scrollController,
                   itemBuilder: (lvContext, index) {
                     final command = arrCommand[index];
                     if (command.inputType == eInputType.commandTextField) {
+                      _command = command;
                       return getCommandTextField(
-                        command: command,
-                        controller: _commandController,
-                        obscureText:
-                            (command.commandType == eCommandType.password),
-                        onSubmitted: (text) {
-                          final trimmedText = text.trim();
-                          if (trimmedText.length > 0) {
-                            if (command.commandType == eCommandType.username) {
-                              command.commandType = eCommandType.password;
-                              _setPrefixText(eCommandType.password);
-                              username = text;
-                              _addInfoTextInList(
-                                  message: text,
-                                  inputType: eInputType.usernameTextField);
-                            } else if (command.commandType ==
-                                eCommandType.password) {
-                              command.commandType = eCommandType.none;
-                              password = text;
-                              _addInfoTextInList(
-                                  message: '',
-                                  inputType: eInputType.passwordTextField);
-                              _addInfoTextInList(
-                                  message: 'Authenticating please wait...',
-                                  inputType: eInputType.authenticating);
-                              _handleAuthentication(
-                                  commandType: _currentCommandType);
-                            } else if (command.commandType ==
-                                eCommandType.exit) {
-                              if (trimmedText.toLowerCase() == 'y') {
-                                _handleLogout();
-                              }
-                            } else {
-                              _handleInputCommand(inputCommand: trimmedText);
-                            }
-                          }
-                        },
-                      );
+                          command: command,
+                          controller: _commandController,
+                          focusNode: focusNodeCommand,
+                          obscureText:
+                              (command.commandType == eCommandType.password),
+                          event: _events,
+                          onSubmitted: (text) {},
+                          onTap: () {
+                            FocusScope.of(context)
+                                .requestFocus(focusNodeCommand);
+                            setState(() {
+                              isShowKeyboard = true;
+                            });
+                          });
                     } else if (command.commandType == eCommandType.help) {
                       return getCommandListWidget();
                     } else if (command.commandType ==
@@ -442,11 +437,105 @@ class _CommandScreenState extends State<CommandScreen> {
                   },
                 ),
               ),
+              Container(
+                color: Colors.black,
+                child: Visibility(
+                  visible: isShowKeyboard,
+                  child: VirtualKeyboard(
+                      height: 300,
+                      textColor: Colors.white,
+                      type: VirtualKeyboardType.Alphanumeric,
+                      onKeyPress: _onKeyPress),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  _onKeyPress(VirtualKeyboardKey key) {
+    if (key.keyType == VirtualKeyboardKeyType.String) {
+      text = text + (shiftEnabled ? key.capsText : key.text);
+      _events.add(text);
+    } else if (key.keyType == VirtualKeyboardKeyType.Action) {
+      switch (key.action) {
+        case VirtualKeyboardKeyAction.Backspace:
+          if (text.length == 0) return;
+          text = text.substring(0, text.length - 1);
+          _events.add(text);
+          break;
+        case VirtualKeyboardKeyAction.Return:
+          print(text);
+          //text = text + '\n';
+          //_events.add(text);
+          _commandController.text = '';
+          if (_command == null) {
+            return;
+          }
+          final trimmedText = text.trim();
+          if (trimmedText.length > 0) {
+            if (_command.commandType == eCommandType.username) {
+              _command.commandType = eCommandType.password;
+              _setPrefixText(eCommandType.password);
+              username = text;
+              _addInfoTextInList(
+                  message: text, inputType: eInputType.usernameTextField);
+            } else if (_command.commandType == eCommandType.password) {
+              _command.commandType = eCommandType.none;
+              password = text;
+              _addInfoTextInList(
+                  message: '', inputType: eInputType.passwordTextField);
+              _addInfoTextInList(
+                  message: 'Authenticating please wait...',
+                  inputType: eInputType.authenticating);
+              _handleAuthentication(commandType: _currentCommandType);
+            } else if (_command.commandType == eCommandType.exit) {
+              if (trimmedText.toLowerCase() == 'y') {
+                _handleLogout();
+              }
+            } else {
+              _handleInputCommand(inputCommand: trimmedText);
+            }
+          }
+          text = '';
+          Future.delayed(const Duration(milliseconds: 40), () {
+            setState(() {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: Duration(milliseconds: 100),
+                curve: Curves.easeInOut,
+              );
+              //_scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              focusNodeCommand.requestFocus();
+            });
+          });
+          break;
+        case VirtualKeyboardKeyAction.Space:
+          text = text + key.text;
+          _events.add(text);
+          break;
+        case VirtualKeyboardKeyAction.Shift:
+          shiftEnabled = !shiftEnabled;
+          break;
+        case VirtualKeyboardKeyAction.close:
+          isShowKeyboard = false;
+          setState(() {});
+          break;
+        default:
+      }
+    } else if (key.keyType == VirtualKeyboardKeyType.Hybrid) {
+      switch (key.action) {
+        case VirtualKeyboardKeyAction.escape:
+          print("Escape");
+          break;
+        case VirtualKeyboardKeyAction.send:
+          print("Send");
+          break;
+        default:
+      }
+    }
   }
 }
 

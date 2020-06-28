@@ -1,5 +1,6 @@
 // AUTHENTICATION WIDGET
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import '../models/command.dart';
 
@@ -43,7 +44,10 @@ Widget getCommandTextField({
   ModelCommand command,
   TextEditingController controller,
   bool obscureText = false,
+  StreamController<String> event,
+  FocusNode focusNode,
   Function(String) onSubmitted,
+  Function onTap,
 }) {
   return Row(
     children: <Widget>[
@@ -55,21 +59,36 @@ Widget getCommandTextField({
         width: 8.0,
       ),
       Expanded(
-        child: TextField(
-          controller: controller,
-          showCursor: true,
-          cursorWidth: 8,
-          cursorColor: Colors.white,
-          onSubmitted: onSubmitted,
-          autocorrect: false,
-          obscureText: obscureText,
-          textCapitalization: TextCapitalization.none,
-          style: commandTextStyle(),
-          decoration: InputDecoration(
-            border: InputBorder.none,
+        child: GestureDetector(
+          onTap: onTap,
+          child: AbsorbPointer(
+            child: StreamBuilder(
+              stream: event.stream,
+              builder: (sbContext, snapshot) {
+                controller.text = snapshot.data;
+                controller.selection = TextSelection.fromPosition(
+                  TextPosition(offset: controller.text.length),
+                );
+                return TextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  showCursor: true,
+                  cursorWidth: 8,
+                  cursorColor: Colors.white,
+                  onSubmitted: onSubmitted,
+                  autocorrect: false,
+                  obscureText: obscureText,
+                  textCapitalization: TextCapitalization.none,
+                  style: commandTextStyle(),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                );
+              },
+            ),
           ),
         ),
-      )
+      ),
     ],
   );
 }

@@ -63,13 +63,17 @@ class AuthProvider with ChangeNotifier {
       final snapshot = await userRef.once();
       if (snapshot.value != null) {
         final values = snapshot.value;
-        values.forEach((userKey, userData) {
-          _users.add(User(
-            userId: userData['user_id'],
-            userName: userData['username'],
-            timeStamp: userData['timestamp'],
-          ));
-        });
+        values.forEach(
+          (userKey, userData) {
+            _users.add(
+              User(
+                userId: userData['user_id'],
+                userName: userData['username'],
+                timeStamp: userData['timestamp'],
+              ),
+            );
+          },
+        );
       }
 
       _users.sort((a, b) => a.timeStamp.compareTo(b.timeStamp));
@@ -107,6 +111,7 @@ class AuthProvider with ChangeNotifier {
       if (authResult != null) {
         final preference = await SharedPreferences.getInstance();
         preference.setString(CONSTANT.username, username);
+        _users.removeWhere((element) => element.userName == username);
         notifyListeners();
       }
     } catch (err) {
@@ -126,6 +131,7 @@ class AuthProvider with ChangeNotifier {
           _storeUserInFirebase(userID: authResult.user.uid, username: username);
           final preference = await SharedPreferences.getInstance();
           preference.setString(CONSTANT.username, username);
+          _users.removeWhere((element) => element.userName == username);
           notifyListeners();
         } catch (err) {
           throw HTTPException(errorMessage: err.toString());
