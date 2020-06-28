@@ -465,6 +465,7 @@ class _CommandScreenState extends State<CommandScreen> {
                     height: 300,
                     fontSize: 23,
                     textColor: Colors.black54,
+                    isChatScreen: false,
                     type: VirtualKeyboardType.Alphanumeric,
                     onKeyPress: _onKeyPress),
               ),

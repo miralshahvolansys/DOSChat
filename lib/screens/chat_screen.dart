@@ -62,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     textEnterMessage.text = keyForMe;
 
-    focusNodeMessage.requestFocus();
+//    focusNodeMessage.requestFocus();
     _events = StreamController<String>.broadcast();
     _events.add(keyForMe);
   }
@@ -186,6 +186,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       height: 300,
                       textColor: Colors.black54 ,
                       fontSize: 23,
+                      isChatScreen: true,
 //                  type: isNumericMode
 //                      ? VirtualKeyboardType.chatAlphanumeric
 //                      : VirtualKeyboardType.Alphanumeric,

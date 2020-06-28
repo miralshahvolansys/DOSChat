@@ -30,6 +30,7 @@ class VirtualKeyboard extends StatefulWidget {
 
   /// Set to true if you want only to show Caps letters.
   final bool alwaysCaps;
+  final bool isChatScreen;
 
    final Function(String) onSubmited;
   VirtualKeyboard(
@@ -41,6 +42,7 @@ class VirtualKeyboard extends StatefulWidget {
       this.textColor = Colors.black,
       this.fontSize = 14,
       this.alwaysCaps = false,
+        this.isChatScreen=false,
       this.onSubmited})
       : super(key: key);
 
@@ -61,6 +63,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
   Color textColor;
   double fontSize;
   bool alwaysCaps;
+  bool isChatScreen;
   // Text Style for keys.
   TextStyle textStyle;
 
@@ -77,6 +80,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
       textColor = widget.textColor;
       fontSize = widget.fontSize;
       alwaysCaps = widget.alwaysCaps;
+      isChatScreen=widget.isChatScreen;
 
       // Init the Text Style for keys.
       textStyle = TextStyle(
@@ -96,6 +100,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
     textColor = widget.textColor;
     fontSize = widget.fontSize;
     alwaysCaps = widget.alwaysCaps;
+    isChatScreen=widget.isChatScreen;
 
     // Init the Text Style for keys.
     textStyle = TextStyle(
@@ -144,7 +149,7 @@ class _VirtualKeyboardState extends State<VirtualKeyboard> {
     } else if (type == VirtualKeyboardType.chatAlphanumeric) {
       keyboardRows = _getchatKeyboardRows();
     } else {
-      keyboardRows = _getKeyboardRows();
+      keyboardRows = _getKeyboardRows(isChatScreen);
     }
 //        type == VirtualKeyboardType.Numeric
 //            ? _getKeyboardRowsNumeric()

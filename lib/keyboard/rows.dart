@@ -200,7 +200,7 @@ List<VirtualKeyboardKey> _getchatKeyboardRowKeys(rowNum) {
 }
 
 /// Returns a list of VirtualKeyboard rows with `VirtualKeyboardKey` objects.
-List<List<VirtualKeyboardKey>> _getKeyboardRows() {
+List<List<VirtualKeyboardKey>> _getKeyboardRows(bool isChatScreen) {
   // Generate lists for each keyboard row.
   return List.generate(_keyRows.length, (int rowNum) {
     // Will contain the keyboard row keys.
@@ -252,7 +252,15 @@ List<List<VirtualKeyboardKey>> _getKeyboardRows() {
         break;
       case 4:
         // String keys.
-        rowKeys = _getKeyboardRowKeys(rowNum);
+        if(isChatScreen) {
+          rowKeys.add(VirtualKeyboardKey(
+              keyType: VirtualKeyboardKeyType.Hybrid,
+              text: 'Esc',
+              capsText: 'ESC',
+              action: VirtualKeyboardKeyAction.escape));
+        }
+        rowKeys.addAll( _getKeyboardRowKeys(rowNum));
+
         rowKeys.add( VirtualKeyboardKey(
             keyType: VirtualKeyboardKeyType.Action,
             text: ' ',
@@ -264,16 +272,14 @@ List<List<VirtualKeyboardKey>> _getKeyboardRows() {
             text: 'Enter',
             capsText: 'Enter',
             action: VirtualKeyboardKeyAction.close));
-        rowKeys.add(  VirtualKeyboardKey(
-            keyType: VirtualKeyboardKeyType.Hybrid,
-            text: 'Esc',
-            capsText: 'Esc',
-            action: VirtualKeyboardKeyAction.escape));
-        rowKeys.add(  VirtualKeyboardKey(
-            keyType: VirtualKeyboardKeyType.Hybrid,
-            text: 'Send',
-            capsText: 'SEND',
-            action: VirtualKeyboardKeyAction.send));
+        if(isChatScreen) {
+
+          rowKeys.add(VirtualKeyboardKey(
+              keyType: VirtualKeyboardKeyType.Hybrid,
+              text: 'Send',
+              capsText: 'SEND',
+              action: VirtualKeyboardKeyAction.send));
+        }
         // Insert the space key into second position of row.
 //        rowKeys.insert(
 //          1,
