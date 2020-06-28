@@ -40,6 +40,7 @@ const signup = 'signup';
 const signin = 'signin';
 
 const username = 'username';
+const userid = 'userid';
 
 // APPLICATION COMMAND
 List<String> helpCommands = [

@@ -82,8 +82,8 @@ class _CommandScreenState extends State<CommandScreen> {
 
   _setInitialData() {
     String infoMessage = '';
-      infoMessage =
-          'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type \'help\' to see available commands and start over.';
+    infoMessage =
+        'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type \'help\' to see available commands and start over.';
 
     _addInfoTextInList(message: infoMessage);
     _addCommandTextField();
@@ -288,7 +288,7 @@ class _CommandScreenState extends State<CommandScreen> {
         try {
           final otherUser = auth.userList.firstWhere((element) =>
               element.userName.toLowerCase() == username.toLowerCase());
-          final loginUser = await auth.getLoginUser();
+          final loginUser = await auth.getLoginUserObject();
           if (loginUser != null && otherUser != null) {
             // REDIRECT TO CHAT SCREEN
             Navigator.push(
@@ -434,13 +434,13 @@ class _CommandScreenState extends State<CommandScreen> {
                 ),
               ),
               Container(
-                color: AppStyle.keyboardbg ,
+                color: AppStyle.keyboardbg,
                 child: Visibility(
                   visible: isShowKeyboard,
                   child: VirtualKeyboard(
                       height: 300,
                       fontSize: 23,
-                      textColor: Colors.black54 ,
+                      textColor: Colors.black54,
                       type: VirtualKeyboardType.Alphanumeric,
                       onKeyPress: _onKeyPress),
                 ),
