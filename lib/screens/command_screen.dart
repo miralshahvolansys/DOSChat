@@ -282,31 +282,39 @@ class _CommandScreenState extends State<CommandScreen> {
 
   _startChat({String inputCommand}) async {
     _addInfoTextInList(message: inputCommand);
-    if (inputCommand.trim().length > 0) {
-      final username = inputCommand.split(' ').last;
-      if (username != null) {
-        final auth = _getAuth;
-        try {
-          final otherUser = auth.userList.firstWhere((element) =>
-              element.userName.toLowerCase() == username.toLowerCase());
-          final loginUser = await auth.getLoginUserObject();
-          if (loginUser != null && otherUser != null) {
-            // REDIRECT TO CHAT SCREEN
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                  userMine: loginUser,
-                  userOther: otherUser,
+    final isLoggedIn =
+        await Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+    if (isLoggedIn) {
+      _addInfoTextInList(message: inputCommand);
+      if (inputCommand.trim().length > 0) {
+        final username = inputCommand.split(' ').last;
+        if (username != null) {
+          final auth = _getAuth;
+          try {
+            final otherUser = auth.userList.firstWhere((element) =>
+                element.userName.toLowerCase() == username.toLowerCase());
+            final loginUser = await auth.getLoginUserObject();
+            if (loginUser != null && otherUser != null) {
+              // REDIRECT TO CHAT SCREEN
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                    userMine: loginUser,
+                    userOther: otherUser,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+          } catch (err) {
+            _addInfoTextInList(
+                message:
+                    'Invalid username! Please try with different username.');
           }
-        } catch (err) {
-          _addInfoTextInList(
-              message: 'Invalid username! Please try with different username.');
         }
       }
+    } else {
+      _addInfoTextInList(message: 'Please login to start chat.');
     }
   }
 
