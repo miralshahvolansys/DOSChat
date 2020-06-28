@@ -16,7 +16,7 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   Timer _timer;
-  int _start = 4;
+  int _start = 5;
 
   String _loadingText = "Loading Dos Chat";
   String _loadingTextSuffix = "";
@@ -30,28 +30,22 @@ class _SplashState extends State<Splash> {
         () {
           _visible = !_visible;
 
-          if (_start == 9) {
+           if (_start == 5) {
             _loadingTextSuffix = ".";
-          } else if (_start == 8) {
-            _loadingTextSuffix = "..";
-          } else if (_start == 7) {
-            _loadingTextSuffix = "...";
-          } else if (_start == 6) {
-            _loadingTextSuffix = "....";
-          } else if (_start == 5) {
-            _loadingTextSuffix = ".....";
           } else if (_start == 4) {
-            _loadingTextSuffix = ".";
-          } else if (_start == 3) {
             _loadingTextSuffix = "..";
-          } else if (_start == 2) {
+          } else if (_start == 3) {
             _loadingTextSuffix = "...";
-          } else if (_start == 1) {
+          } else if (_start == 2) {
             _loadingTextSuffix = "....";
+          } else if (_start == 1) {
+            _loadingTextSuffix = ".....";
           }
 
           if (_start < 1) {
             timer.cancel();
+            _loadingText = "";
+            _loadingTextSuffix = "";
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (ctx) {
