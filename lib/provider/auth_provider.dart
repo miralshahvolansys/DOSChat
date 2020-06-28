@@ -61,17 +61,22 @@ class AuthProvider with ChangeNotifier {
         FirebaseDatabase.instance.reference().child(CONSTANT.firebaseNodeUser);
     try {
       final snapshot = await userRef.once();
+      final pref = await SharedPreferences.getInstance();
+      final username = pref.getString(CONSTANT.username);
+      print(username);
       if (snapshot.value != null) {
         final values = snapshot.value;
         values.forEach(
           (userKey, userData) {
-            _users.add(
-              User(
-                userId: userData['user_id'],
-                userName: userData['username'],
-                timeStamp: userData['timestamp'],
-              ),
-            );
+            if (username != userData['username']) {
+              _users.add(
+                User(
+                  userId: userData['user_id'],
+                  userName: userData['username'],
+                  timeStamp: userData['timestamp'],
+                ),
+              );
+            }
           },
         );
       }

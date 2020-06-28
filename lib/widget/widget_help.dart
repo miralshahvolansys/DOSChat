@@ -14,7 +14,8 @@ class HelpWidget extends StatelessWidget {
             height: 8,
           ),
           HelpChildWidget(
-            text: 'Retro Chat, version 1.0.0-beta',
+            text:
+                'Retro-Chat, version 1.0.0-beta \nThese commands are defined internally. Type ‘help’ to see this list.',
             leftPadding: EdgeInsets.only(left: 0),
           ),
           /*HelpChildWidget(
@@ -26,28 +27,28 @@ class HelpWidget extends StatelessWidget {
             height: 12,
           ),
           HelpChildWidget(
-            text: 'signup | Create a new user.',
+            text: 'help -  Provide more information on the commands.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'signin | Signin with exsting user.',
+            text: 'signin - sign in using the username.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'ls userlist | Display the list of users.',
+            text: 'signup - create a new user.',
+            leftPadding: EdgeInsets.only(left: 15),
+          ),
+          HelpChildWidget(
+            text: 'ls - Display the list of users.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
             text:
-                'start chat | Start chat with user. e.g. start chat {username}',
+                'clear -  use to remove all previous commands and output from screen.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
           HelpChildWidget(
-            text: 'clear | Clear the command screen.',
-            leftPadding: EdgeInsets.only(left: 15),
-          ),
-          HelpChildWidget(
-            text: 'exit | Logout user.',
+            text: 'exit - logout current user.',
             leftPadding: EdgeInsets.only(left: 15),
           ),
         ],

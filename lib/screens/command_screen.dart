@@ -82,12 +82,8 @@ class _CommandScreenState extends State<CommandScreen> {
 
   _setInitialData() {
     String infoMessage = '';
-    if (!widget.isLoggedIn) {
       infoMessage =
-          'Welcome to Retro Chat. Type \'help\' to see command list of Retro Chat.';
-    } else {
-      infoMessage = 'Welcome to Retro Chat. Start chatting with your friends.';
-    }
+          'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type ‘help’ to see available commands and start over.';
 
     _addInfoTextInList(message: infoMessage);
     _addCommandTextField();
@@ -212,7 +208,7 @@ class _CommandScreenState extends State<CommandScreen> {
       case CONSTANT.help:
         _showAllCommandList(inputCommand: inputCommand);
         break;
-      case CONSTANT.ls_userlist:
+      case CONSTANT.ls:
         _showUserList(inputCommand: inputCommand);
         break;
       case CONSTANT.startChat:
@@ -249,8 +245,8 @@ class _CommandScreenState extends State<CommandScreen> {
       return CONSTANT.signup;
     } else if (inputCommand.contains(CONSTANT.signin) && arr.length == 1) {
       return CONSTANT.signin;
-    } else if (inputCommand.contains(CONSTANT.ls_userlist) && arr.length == 2) {
-      return CONSTANT.ls_userlist;
+    } else if (inputCommand.contains(CONSTANT.ls) && arr.length == 1) {
+      return CONSTANT.ls;
     } else if (inputCommand.contains(CONSTANT.startChat) && arr.length == 3) {
       return CONSTANT.startChat;
     } else if (inputCommand.contains(CONSTANT.clear) && arr.length == 1) {
@@ -495,6 +491,10 @@ class _CommandScreenState extends State<CommandScreen> {
             } else if (_command.commandType == eCommandType.exit) {
               if (trimmedText.toLowerCase() == 'y') {
                 _handleLogout();
+              } else if (trimmedText.toLowerCase() == 'n') {
+                _addInfoTextInList(message: 'n');
+              } else {
+                _handleInputCommand(inputCommand: trimmedText);
               }
             } else {
               _handleInputCommand(inputCommand: trimmedText);
