@@ -81,12 +81,8 @@ class _CommandScreenState extends State<CommandScreen> {
 
   _setInitialData() {
     String infoMessage = '';
-    if (!widget.isLoggedIn) {
       infoMessage =
-          'Welcome to Retro Chat. Type \'help\' to see command list of Retro Chat.';
-    } else {
-      infoMessage = 'Welcome to Retro Chat. Start chatting with your friends.';
-    }
+          'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type ‘help’ to see available commands and start over.';
 
     _addInfoTextInList(message: infoMessage);
     _addCommandTextField();
