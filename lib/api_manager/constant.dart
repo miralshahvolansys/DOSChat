@@ -29,6 +29,7 @@ const keyMessage = 'message';
 // COMMAND CONSTANT
 const help = 'help';
 const ls_userlist = 'ls userlist';
+const startChat = 'start chat';
 const exit = 'exit';
 const clear = 'clear';
 const createUser = 'create user';
