@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:provider/provider.dart';
 import 'package:retrochat/provider/user_provider.dart';
 
 import '../api_manager/http_exception.dart';
@@ -54,11 +53,15 @@ class AuthProvider with ChangeNotifier {
           _users.add(User(
             userId: userData['user_id'],
             userName: userData['username'],
+            timeStamp: userData['timestamp'],
           ));
         });
       }
+
+      _users.sort((a, b) => a.timeStamp.compareTo(b.timeStamp));
       userRef
-          .startAt(DateTime.now().toUtc().millisecondsSinceEpoch)
+          .orderByChild('timestamp')
+          .startAt(_users.last.timeStamp + 1)
           .onChildAdded
           .listen(_addNewUser);
     } catch (error) {
@@ -77,6 +80,7 @@ class AuthProvider with ChangeNotifier {
     return User(
       userId: values['user_id'],
       userName: values['username'],
+      timeStamp: values['timestamp'],
     );
   }
 
@@ -133,6 +137,7 @@ class AuthProvider with ChangeNotifier {
         {
           'username': username,
           'user_id': userID,
+          'timestamp': ServerValue.timestamp,
         },
       );
     } catch (err) {

@@ -4,10 +4,12 @@ import 'package:firebase_database/firebase_database.dart';
 class User {
   final String userId;
   final String userName;
+  final int timeStamp;
 
   User({
     this.userId,
     this.userName,
+    this.timeStamp,
   });
 }
 
