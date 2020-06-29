@@ -1,4 +1,4 @@
-# retrochat
+# DOSChat
 
 A new Flutter application.
 
