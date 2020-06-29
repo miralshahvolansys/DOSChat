@@ -20,7 +20,7 @@ class _SplashState extends State<Splash> {
   Timer _timer;
   int _start = 5;
 
-  String _loadingText = "Loading Dos Chat";
+  String _loadingText = "Loading DOSChat";
   String _loadingTextSuffix = "";
   bool _visible = false;
 
