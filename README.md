@@ -17,6 +17,7 @@
 ## Screenshots
 
 ## Download the App
+* [Download DOSChat.apk](https://drive.google.com/file/d/1slTJr3XOruD7bHehRZct5BPzpzeUU5xv/view?usp=sharing)
 
 ## Run the App
 * This application require firbase account to setup, so please setup your account and configure firebase for this.
