@@ -20,7 +20,7 @@
 
 ## Run the App
 * This application require firbase account to setup, so please setup your account and configure firebase for this.
-* Follow [Firebase setup guide](https://firebase.google.com/docs/guides) and generate GoogleService-Info.plist for iOS and google-servce.json for android, and place those files in respective folder. [follow firebase setup guide for android and ios] (https://console.firebase.google.com/u/0/project/_/authentication/providers) 
+* Follow [Firebase setup guide](https://firebase.google.com/docs/guides) and generate GoogleService-Info.plist for iOS and google-servce.json for android, and place those files in respective folder.
 * And finally replace your API_KEY and baseURL in to constant.dart file
 
 ### About App
