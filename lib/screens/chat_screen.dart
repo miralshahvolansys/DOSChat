@@ -125,6 +125,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               textEnterMessage.selection =
                                   TextSelection.fromPosition(TextPosition(
                                       offset: textEnterMessage.text.length));
+                              FocusScope.of(context).requestFocus(focusNodeMessage);
                               return TextField(
                                 showCursor: true,
                                 readOnly: true,
