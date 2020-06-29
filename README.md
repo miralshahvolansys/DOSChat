@@ -32,5 +32,5 @@
 * Miral Shah
 * Mitesh Mistri
 * Mirant Patel
-* Dipenc Patel
+* Dipen Patel
 * Ankit Khatri
