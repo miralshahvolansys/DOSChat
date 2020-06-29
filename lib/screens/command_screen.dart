@@ -83,7 +83,7 @@ class _CommandScreenState extends State<CommandScreen> {
   _setInitialData() {
     String infoMessage = '';
     infoMessage =
-        'Welcome to Retro Chat. Start chatting with your friends and enjoy retro look. Type \'help\' to see available commands and start over.';
+        'Welcome to DOSChat. Start chatting with your friends and enjoy retro look. Type \'help\' to see available commands and start over.';
 
     _addInfoTextInList(message: infoMessage);
     _addCommandTextField();
@@ -140,7 +140,7 @@ class _CommandScreenState extends State<CommandScreen> {
     loginUsername = username;
     username = '';
     password = '';
-    _addInfoTextInList(message: 'Login successfully. Welcome to Retro Chat');
+    _addInfoTextInList(message: 'Login successfully. Welcome to DOSChat');
     arrCommand.removeLast();
     _addCommandTextField();
   }
