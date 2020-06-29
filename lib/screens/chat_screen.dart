@@ -8,6 +8,7 @@ import 'package:retrochat/provider/user_provider.dart';
 import 'package:retrochat/utility/app_style.dart';
 import 'package:retrochat/utility/common_methods.dart';
 import 'package:retrochat/keyboard/virtual_keyboard.dart';
+import 'package:intl/intl.dart';
 
 final database = FirebaseDatabase.instance;
 
@@ -89,6 +90,8 @@ class _ChatScreenState extends State<ChatScreen> {
     _scrollToBottom();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -157,8 +160,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
                     child: Text(
-                      precisionChatText(
-                          listChatAllData[index], userMine, userOther),
+
+                      "${ timestampToDateDisplayFormat(listChatAllData[index].timeStamp)} ${precisionChatText(listChatAllData[index], userMine, userOther)}",
                       style: TextStyle(
                           color: isMyMessage(
                                   listChatAllData[index], userMine, userOther)

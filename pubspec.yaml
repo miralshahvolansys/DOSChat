@@ -34,6 +34,7 @@ dependencies:
   provider: ^4.1.2
   shared_preferences: ^0.5.7+3
   animated_text_kit: ^2.2.0
+  intl: ^0.16.1
 
 
 dev_dependencies:
