@@ -1,10 +1,10 @@
 library constant;
 
 // API KEY
-const String API_KEY = 'AIzaSyBsOPJVj7m5Glp1IpuqpD47Tb28b3NW9Es';
+const String API_KEY = '';
 
 // BASE URL
-const String baseURL = 'https://retrochat2020-d602a.firebaseio.com/';
+const String baseURL = '';
 
 // AUTH URL
 const String authURLSignup =
