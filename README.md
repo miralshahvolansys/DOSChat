@@ -4,13 +4,13 @@
 * An app that fits into retro theme for Hack20.
 
 ### DOSChat commands:
-help - Provide more information on the commands.
- signin - Sign in using the username.
- signup - Create a new user.
- ls - Display the list of users.
-start chat - Start chat with user. e.g. start chat (username)
-clear - Use to remove all previous commands and output from screen.
-exit - Logout current user.
+* help - Provide more information on the commands.
+* signin - Sign in using the username.
+* signup - Create a new user.
+* ls - Display the list of users.
+* start chat - Start chat with user. e.g. start chat (username)
+* clear - Use to remove all previous commands and output from screen.
+* exit - Logout current user.
 
 ## Video
 
