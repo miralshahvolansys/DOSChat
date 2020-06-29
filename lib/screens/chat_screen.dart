@@ -10,6 +10,8 @@ import 'package:retrochat/utility/common_methods.dart';
 import 'package:retrochat/keyboard/virtual_keyboard.dart';
 import 'package:intl/intl.dart';
 
+import '../api_manager/constant.dart';
+
 final database = FirebaseDatabase.instance;
 
 class ChatScreen extends StatefulWidget {
@@ -250,6 +252,7 @@ class _ChatScreenState extends State<ChatScreen> {
           _events.add(text);
 
           setState(() {
+            textEnterMessage.text = keyForMe;
             listChatCommand.add(Chat(
                 "", keyForExit, "${DateTime.now().millisecondsSinceEpoch}"));
             _scrollToBottom();
