@@ -14,7 +14,7 @@
 
 ## Video
 
-## Screenshots
+#### Screenshots
 <img width="200" alt="Loading view" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/Loading.png"> <img width="200" alt="landing screen" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/command-withoutlogin.png"> <img width="200" alt="Help command" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/Help command.png"> <img width="200" alt="ls command" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/ls-command.png"> <img width="200" alt="Start chat" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/start-chat.png"> <img width="200" alt="chat screen" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/chat-screen.png"><img width="200" alt="chat exit" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/chat exit.png"><img width="200" alt="exit logout" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/Exit command.png"><img width="200" alt="clear" src="https://github.com/miralshahvolansys/DOSChat/tree/master/screenshots/clear.png">
 
 ## Download the App
