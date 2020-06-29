@@ -1,16 +1,21 @@
-# DOSChat
+# DOSChat 
+Real-time chat applications like WhatsApp, Facebook Messenger, Snapchat were already dominating the market, but post COVID-19 pandemic as the social distancing and WFH are new normal, they have become a crucial and integral component to keep people connected professionally and personally both. In an attempt to give a nostalgic retro feel to popular real-time chat apps, we have designed a MS DOS based real-time chat application called DOSChat. 
 
-A new Flutter application.
+### DOSChat commands:
+help - Provide more information on the commands.
+ signin - Sign in using the username.
+ signup - Create a new user.
+ ls - Display the list of users.
+start chat - Start chat with user. e.g. start chat (username)
+clear - Use to remove all previous commands and output from screen.
+exit - Logout current user.
 
-## Getting Started
+## Video
 
-This project is a starting point for a Flutter application.
+## Screenshots
 
-A few resources to get you started if this is your first Flutter project:
+## Download the App
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Run the App
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Team Members
